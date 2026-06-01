@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinPlan — วางแผนการเงิน</title>
+<style>
+  :root {
+    --bg: #FAF7F0;
+    --surface: #FFFFFF;
+    --surface2: #F5F0E8;
+    --gold: #B8860B;
+    --gold-light: #D4A853;
+    --gold-pale: #F9F0DC;
+    --brown: #5C3D11;
+    --brown-light: #8B5E3C;
+    --text: #2C1A0E;
+    --text-muted: #7A6250;
+    --green: #3D7A52;
+    --green-pale: #E8F5EE;
+    --red: #B85450;
+    --red-pale: #FCF0EF;
+    --border: #E8DDD0;
+    --radius: 12px;
+    --shadow: 0 2px 8px rgba(92,61,17,0.08);
+    --shadow-lg: 0 8px 32px rgba(92,61,17,0.14);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Thai', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: var(--brown);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+  }
+
+  .sidebar-logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .sidebar-logo h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--gold-light);
+    letter-spacing: 3px;
+  }
+
+  .sidebar-logo p {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 3px;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.58);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.09); color: white; }
+
+  .nav-item.active {
+    background: var(--gold-light);
+    color: var(--brown);
+    font-weight: 700;
+  }
+
+  .nav-icon { font-size: 17px; flex-shrink: 0; }
+
+  .sidebar-footer {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px;
+    color: rgba(255,255,255,0.28);
+  }
+
+  /* ── Main ── */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    padding: 28px 32px 0;
+    margin-bottom: 4px;
+  }
+
+  .page-header h2 {
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--brown);
+  }
+
+  .page-header p {
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-size: 14px;
+  }
+
+  .content {
+    padding: 20px 32px 48px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-header h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--brown);
+    letter-spacing: 0.2px;
+  }
+
+  .card-body { padding: 20px; }
+
+  /* ── Grid ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+  /* ── Stat cards ── */
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 25px;
+    font-weight: 700;
+    margin-top: 5px;
+    color: var(--brown);
+  }
+
+  .stat-value.positive { color: var(--green); }
+  .stat-value.negative { color: var(--red); }
+  .stat-value.gold { color: var(--gold); }
+
+  .stat-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* ── Forms ── */
+  .form-group { margin-bottom: 14px; }
+
+  .form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--brown-light);
+    margin-bottom: 5px;
+    letter-spacing: 0.2px;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    padding: 9px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+    font-family: inherit;
+  }
+
+  .form-input:focus, .form-select:focus {
+    border-color: var(--gold-light);
+    box-shadow: 0 0 0 3px rgba(212,168,83,0.14);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-primary { background: var(--gold); color: white; }
+  .btn-primary:hover { background: var(--brown); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--brown-light);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--gold-light); color: var(--gold); }
+
+  .btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1.5px solid #E8A09D;
+    padding: 5px 11px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+  .btn-danger:hover { background: var(--red-pale); }
+
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+
+  /* ── Table ── */
+  .table { width: 100%; border-collapse: collapse; }
+
+  .table th {
+    text-align: left;
+    padding: 9px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    border-bottom: 1.5px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .table td {
+    padding: 11px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table tr:last-child td { border-bottom: none; }
+  .table tbody tr:hover td { background: var(--surface2); }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .tag-income { background: var(--green-pale); color: var(--green); }
+  .tag-expense { background: var(--red-pale); color: var(--red); }
+
+  /* ── Progress ── */
+  .progress-bar {
+    height: 7px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--gold);
+    transition: width 0.5s ease;
+  }
+
+  .progress-fill.green { background: var(--green); }
+  .progress-fill.red { background: var(--red); }
+
+  /* ── Utilities ── */
+  .section { margin-bottom: 20px; }
+  .flex { display: flex; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .gap-8 { gap: 8px; }
+  .gap-12 { gap: 12px; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .text-right { text-align: right; }
+  .text-positive { color: var(--green); font-weight: 600; }
+  .text-negative { color: var(--red); font-weight: 600; }
+  .text-gold { color: var(--gold); font-weight: 600; }
+  .font-mono { font-variant-numeric: tabular-nums; }
+  .font-bold { font-weight: 700; }
+
+  /* ── Page visibility ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Sub-tabs ── */
+  .sub-tabs {
+    display: flex;
+    gap: 3px;
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 3px;
+    width: fit-content;
+  }
+
+  .sub-tab {
+    padding: 6px 15px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .sub-tab.active {
+    background: white;
+    color: var(--brown);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+  }
+
+  /* ── Highlight box ── */
+  .highlight-box {
+    background: var(--gold-pale);
+    border: 1px solid #DFC07A;
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+
+  .highlight-box.green {
+    background: var(--green-pale);
+    border-color: #8DC8A8;
+  }
+
+  .highlight-box.red {
+    background: var(--red-pale);
+    border-color: #E8A09D;
+  }
+
+  /* ── Tips ── */
+  .tip-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--green-pale);
+    border: 1px solid #A8D5B5;
+    border-radius: 8px;
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #2A5E3E;
+  }
+
+  /* ── Tax rows ── */
+  .tax-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .tax-row:last-child { border-bottom: none; }
+
+  /* ── Asset allocation ── */
+  .allocation-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .allocation-item:last-child { border-bottom: none; }
+
+  .allocation-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .allocation-name { flex: 1; font-size: 14px; }
+  .allocation-amount { font-size: 14px; font-weight: 600; color: var(--brown); }
+  .allocation-pct { font-size: 12px; color: var(--text-muted); min-width: 38px; text-align: right; }
+
+  /* ── Chart ── */
+  .chart-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 150px;
+    padding: 0 4px;
+  }
+
+  .chart-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  .chart-bars {
+    display: flex;
+    gap: 3px;
+    align-items: flex-end;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .bar {
+    width: 13px;
+    border-radius: 3px 3px 0 0;
+    min-height: 0;
+  }
+
+  .bar.income { background: var(--green); opacity: 0.82; }
+  .bar.expense { background: var(--red); opacity: 0.75; }
+
+  .chart-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  /* ── Donut ring (CSS only) ── */
+  .donut-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 16px;
+  }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(44,26,14,0.42);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: white;
+    border-radius: 16px;
+    width: 500px;
+    max-width: 95vw;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    animation: slideUp 0.2s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--brown); }
+
+  .modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: var(--text-muted);
+    line-height: 1;
+    padding: 0 2px;
+  }
+
+  .modal-body { padding: 22px 24px; max-height: 70vh; overflow-y: auto; }
+
+  .modal-footer {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 36px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-icon { font-size: 36px; margin-bottom: 10px; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 800px) {
+    .sidebar { width: 60px; }
+    .sidebar-logo p, .nav-item span:not(.nav-icon), .sidebar-footer { display: none; }
+    .sidebar-logo h1 { font-size: 14px; letter-spacing: 0; }
+    .main { margin-left: 60px; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .content { padding: 16px; }
+    .page-header { padding: 16px 16px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h1>FINPLAN</h1>
+    <p>วางแผนการเงินส่วนตัว</p>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="goTo('dashboard')">
+      <span class="nav-icon">📊</span><span>ภาพรวม</span>
+    </button>
+    <button class="nav-item" onclick="goTo('cashflow')">
+      <span class="nav-icon">💸</span><span>รายรับ-รายจ่าย</span>
+    </button>
+    <button class="nav-item" onclick="goTo('invest')">
+      <span class="nav-icon">📈</span><span>ลงทุน</span>
+    </button>
+    <button class="nav-item" onclick="goTo('tax')">
+      <span class="nav-icon">🧾</span><span>ภาษี</span>
+    </button>
+    <button class="nav-item" onclick="goTo('retire')">
+      <span class="nav-icon">🌿</span><span>เกษียณ</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">ข้อมูลบันทึกในเครื่อง</div>
+</aside>
+
+<main class="main">
+
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <div id="page-dashboard" class="page active">
+    <div class="page-header">
+      <h2>ภาพรวมการเงิน</h2>
+      <p id="dash-date"></p>
+    </div>
+    <div class="content">
+      <div class="grid-4 section" id="dash-stats"></div>
+      <div class="grid-2 section">
+        <div class="card">
+          <div class="card-header"><h3>กระแสเงินสด 6 เดือนล่าสุด</h3></div>
+          <div class="card-body">
+            <div class="chart-wrap" id="dash-chart"></div>
+            <div style="display:flex;gap:16px;justify-content:center;margin-top:10px">
+              <span style="font-size:11px;color:var(--green);font-weight:700">■ รายรับ</span>
+              <span style="font-size:11px;color:var(--red);font-weight:700">■ รายจ่าย</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>ความคืบหน้าเป้าหมาย</h3></div>
+          <div class="card-body" id="dash-goals"></div>
+        </div>
+      </div>
+      <div class="card section">
+        <div class="card-header"><h3>รายการล่าสุด</h3></div>
+        <div id="dash-recent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ CASHFLOW ══════════ -->
+  <div id="page-cashflow" class="page">
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h2>รายรับ-รายจ่าย</h2>
+          <p>บันทึกและติดตามกระแสเงินสดรายเดือน</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-txn')">+ เพิ่มรายการ</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-3 section">
+        <div class="stat-card">
+          <div class="stat-label">รายรับเดือนนี้</div>
+          <div class="stat-value positive font-mono" id="cf-income">฿0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">รายจ่ายเดือนนี้</div>
+          <div class="stat-value negative font-mono" id="cf-expense">฿0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">คงเหลือสุทธิ</div>
+          <div class="stat-value font-mono" id="cf-net">฿0</div>
+        </div>
+      </div>
+      <div class="flex-between section" style="margin-bottom:12px">
+        <div class="sub-tabs">
+          <button class="sub-tab active" onclick="setFilter('all',this)">ทั้งหมด</button>
+          <button class="sub-tab" onclick="setFilter('income',this)">รายรับ</button>
+          <button class="sub-tab" onclick="setFilter('expense',this)">รายจ่าย</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:13px;color:var(--text-muted)">เดือน:</span>
+          <select class="form-select" style="width:auto;padding:6px 10px;font-size:13px" id="month-filter" onchange="renderCashflow()"></select>
+        </div>
+      </div>
+      <div class="card"><div id="cf-table"></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ INVEST ══════════ -->
+  <div id="page-invest" class="page">
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h2>วางแผนลงทุน</h2>
+          <p>ติดตาม Portfolio และ Asset Allocation</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('modal-asset')">✎ จัดการสินทรัพย์</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-3 section">
+        <div class="stat-card">
+          <div class="stat-label">มูลค่า Portfolio รวม</div>
+          <div class="stat-value gold font-mono" id="inv-total">฿0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">กำไร / ขาดทุน</div>
+          <div class="stat-value font-mono" id="inv-pnl">฿0</div>
+          <div class="stat-sub" id="inv-pnl-pct"></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">ความคืบหน้าสู่เป้าหมาย</div>
+          <div class="stat-value font-mono" id="inv-goal-pct">0%</div>
+          <div class="stat-sub" id="inv-goal-txt"></div>
+          <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" id="inv-goal-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="grid-2 section">
+        <div class="card">
+          <div class="card-header"><h3>สินทรัพย์ทั้งหมด</h3></div>
+          <div class="card-body" id="inv-alloc"></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>ตั้งค่าเป้าหมายและผลตอบแทน</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label">เป้าหมาย Portfolio (บาท)</label>
+              <input type="number" class="form-input" id="inv-goal-input" placeholder="5,000,000" oninput="saveInvSettings()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ผลตอบแทนเฉลี่ยต่อปีที่คาดหวัง (%)</label>
+              <input type="number" class="form-input" id="inv-return-input" placeholder="7" step="0.5" oninput="saveInvSettings()">
+            </div>
+            <div id="inv-projection"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ TAX ══════════ -->
+  <div id="page-tax" class="page">
+    <div class="page-header">
+      <h2>วางแผนภาษี</h2>
+      <p>คำนวณภาษีเงินได้บุคคลธรรมดา — ปีภาษี 2568</p>
+    </div>
+    <div class="content">
+      <div class="grid-2 section">
+        <!-- Left: inputs -->
+        <div>
+          <div class="card">
+            <div class="card-header"><h3>รายได้และการหักลดหย่อน</h3></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">รายได้ต่อปี (บาท)</label>
+                <input type="number" class="form-input" id="t-income" placeholder="600,000" oninput="calcTax()">
+              </div>
+              <div class="divider"></div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">ประกัน</div>
+              <div class="form-group">
+                <label class="form-label">ประกันชีวิต (max 100,000 บาท)</label>
+                <input type="number" class="form-input" id="t-life" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">ประกันสุขภาพ — ตัวเอง (max 25,000 บาท)</label>
+                <input type="number" class="form-input" id="t-health" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">ประกันสุขภาพ — พ่อแม่ (max 15,000 บาท)</label>
+                <input type="number" class="form-input" id="t-parent" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="divider"></div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">กองทุนเพื่อการเกษียณ</div>
+              <div class="form-group">
+                <label class="form-label">SSF (max 30% รายได้, ไม่เกิน 200,000 บาท)</label>
+                <input type="number" class="form-input" id="t-ssf" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">RMF (SSF+RMF+PVD รวมไม่เกิน 500,000 บาท)</label>
+                <input type="number" class="form-input" id="t-rmf" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">กองทุนสำรองเลี้ยงชีพ PVD (max 500,000 บาท)</label>
+                <input type="number" class="form-input" id="t-pvd" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="divider"></div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">อื่นๆ</div>
+              <div class="form-group">
+                <label class="form-label">ประกันสังคม (จ่ายจริง)</label>
+                <input type="number" class="form-input" id="t-social" placeholder="9,000" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">ดอกเบี้ยกู้ซื้อบ้าน (max 100,000 บาท)</label>
+                <input type="number" class="form-input" id="t-mortgage" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">เงินบริจาค (max 10% ของรายได้หลังหักค่าใช้จ่าย)</label>
+                <input type="number" class="form-input" id="t-donate" placeholder="0" oninput="calcTax()">
+              </div>
+              <div class="form-group">
+                <label class="form-label">จำนวนบุตรที่ลดหย่อนได้</label>
+                <input type="number" class="form-input" id="t-child" placeholder="0" min="0" oninput="calcTax()">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right: results -->
+        <div>
+          <div class="card section">
+            <div class="card-header"><h3>ผลการคำนวณภาษี</h3></div>
+            <div class="card-body" id="tax-result">
+              <div class="empty-state"><div class="empty-icon">🧾</div><p>กรอกรายได้ด้านซ้ายเพื่อคำนวณ</p></div>
+            </div>
+          </div>
+          <div class="card section">
+            <div class="card-header"><h3>อัตราภาษีขั้นบันได</h3></div>
+            <div class="card-body" id="tax-brackets-display"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>💡 เคล็ดลับประหยัดภาษี</h3></div>
+            <div class="card-body" id="tax-tips">
+              <p style="font-size:13px;color:var(--text-muted)">กรอกข้อมูลเพื่อดูคำแนะนำ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ RETIRE ══════════ -->
+  <div id="page-retire" class="page">
+    <div class="page-header">
+      <h2>วางแผนเกษียณ</h2>
+      <p>คำนวณเส้นทางสู่อิสรภาพทางการเงิน (FIRE)</p>
+    </div>
+    <div class="content">
+      <div class="grid-2 section">
+        <div class="card">
+          <div class="card-header"><h3>ข้อมูลส่วนตัว</h3></div>
+          <div class="card-body">
+            <div class="form-group">
+              <label class="form-label">อายุปัจจุบัน</label>
+              <input type="number" class="form-input" id="r-age" value="32" oninput="calcRetire()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">อายุที่ต้องการเกษียณ</label>
+              <input type="number" class="form-input" id="r-ret-age" value="55" oninput="calcRetire()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ค่าใช้จ่ายหลังเกษียณ/เดือน (บาท, ราคาปัจจุบัน)</label>
+              <input type="number" class="form-input" id="r-spend" value="50000" oninput="calcRetire()">
+            </div>
+            <div class="divider"></div>
+            <div class="form-group">
+              <label class="form-label">เงินออม/ลงทุนที่มีอยู่แล้ว (บาท)</label>
+              <input type="number" class="form-input" id="r-current" value="0" oninput="calcRetire()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ออม/ลงทุนเพิ่มต่อเดือน (บาท)</label>
+              <input type="number" class="form-input" id="r-monthly" value="10000" oninput="calcRetire()">
+            </div>
+            <div class="divider"></div>
+            <div class="form-group">
+              <label class="form-label">ผลตอบแทนลงทุนต่อปี (%)</label>
+              <input type="number" class="form-input" id="r-return" value="7" step="0.5" oninput="calcRetire()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">อัตราเงินเฟ้อต่อปี (%)</label>
+              <input type="number" class="form-input" id="r-inf" value="3" step="0.5" oninput="calcRetire()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">อายุขัยที่วางแผน (ปี)</label>
+              <input type="number" class="form-input" id="r-life" value="85" oninput="calcRetire()">
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card section">
+            <div class="card-header"><h3>ผลการวางแผน</h3></div>
+            <div class="card-body" id="retire-result"></div>
+          </div>
+          <div class="card section">
+            <div class="card-header"><h3>FIRE Number (4% Rule)</h3></div>
+            <div class="card-body" id="retire-fire"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>ตาราง Milestone</h3></div>
+            <div class="card-body" id="retire-milestones"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ MODAL: Transaction ══ -->
+<div class="modal-overlay" id="modal-txn">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>เพิ่มรายการ</h3>
+      <button class="modal-close" onclick="closeModal('modal-txn')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">ประเภท</label>
+        <select class="form-select" id="txn-type" onchange="updateTxnCats()">
+          <option value="income">รายรับ</option>
+          <option value="expense">รายจ่าย</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">หมวดหมู่</label>
+        <select class="form-select" id="txn-cat"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">รายละเอียด</label>
+        <input type="text" class="form-input" id="txn-note" placeholder="เช่น เงินเดือนเดือนพฤษภาคม">
+      </div>
+      <div class="form-group">
+        <label class="form-label">จำนวน (บาท)</label>
+        <input type="number" class="form-input" id="txn-amount" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">วันที่</label>
+        <input type="date" class="form-input" id="txn-date">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-txn')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveTxn()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: Assets ══ -->
+<div class="modal-overlay" id="modal-asset">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>จัดการสินทรัพย์</h3>
+      <button class="modal-close" onclick="closeModal('modal-asset')">×</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-bottom:6px">
+        <span class="form-label" style="margin:0">สินทรัพย์</span>
+        <span class="form-label" style="margin:0">ต้นทุน (฿)</span>
+        <span class="form-label" style="margin:0">ราคาปัจจุบัน (฿)</span>
+        <span></span>
+      </div>
+      <div id="asset-rows"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="addAssetRow()">+ เพิ่มสินทรัพย์</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-asset')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveAssets()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  CONSTANTS & DATA
+// ════════════════════════════════════════════
+
+const PALETTE = ['#B8860B','#3D7A52','#4A6FA5','#8A5FA8','#B85450','#C07030','#2E86AB'];
+
+const INCOME_CATS  = ['เงินเดือน','Freelance / รายได้เสริม','รายได้จากการลงทุน','โบนัส','ขายของ','อื่นๆ (รายรับ)'];
+const EXPENSE_CATS = ['บ้าน / เช่า','อาหาร','เดินทาง','สุขภาพ / ประกัน','ออม / ลงทุน','ช้อปปิ้ง','บันเทิง','สาธารณูปโภค','การศึกษา','อื่นๆ (รายจ่าย)'];
+
+const TAX_BRACKETS = [
+  { ceil: 150000,   rate: 0    },
+  { ceil: 300000,   rate: 0.05 },
+  { ceil: 500000,   rate: 0.10 },
+  { ceil: 750000,   rate: 0.15 },
+  { ceil: 1000000,  rate: 0.20 },
+  { ceil: 2000000,  rate: 0.25 },
+  { ceil: 5000000,  rate: 0.30 },
+  { ceil: Infinity, rate: 0.35 },
+];
+
+function load(k, d) {
+  try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; }
+}
+function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+let txns    = load('fp_txns', []);
+let assets  = load('fp_assets', [
+  { name: 'หุ้น / SSF',               cost: 0, cur: 0, color: PALETTE[0] },
+  { name: 'กองทุนรวม / RMF',           cost: 0, cur: 0, color: PALETTE[1] },
+  { name: 'พันธบัตร / ตราสารหนี้',      cost: 0, cur: 0, color: PALETTE[2] },
+  { name: 'เงินฝาก / บัญชีออมทรัพย์',  cost: 0, cur: 0, color: PALETTE[3] },
+  { name: 'ทองคำ',                     cost: 0, cur: 0, color: PALETTE[4] },
+  { name: 'อสังหาริมทรัพย์',            cost: 0, cur: 0, color: PALETTE[5] },
+]);
+let invSet  = load('fp_invset', { goal: 5000000, ret: 7 });
+let txnFilt = 'all';
+let tempAssets = [];
+
+// ════════════════════════════════════════════
+//  FORMATTING
+// ════════════════════════════════════════════
+
+function fmt(n)   { return '฿' + Math.round(n).toLocaleString('th-TH'); }
+function fmtN(n)  { return Math.round(n).toLocaleString('th-TH'); }
+function fmtP(n)  { return (n >= 0 ? '+' : '') + n.toFixed(1) + '%'; }
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+
+function goTo(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'"))
+      n.classList.add('active');
+  });
+  const renders = { dashboard: renderDashboard, cashflow: renderCashflow, invest: renderInvest, tax: renderTax, retire: calcRetire };
+  renders[id] && renders[id]();
+}
+
+// ════════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════════
+
+function renderDashboard() {
+  const now = new Date();
+  document.getElementById('dash-date').textContent =
+    now.toLocaleDateString('th-TH', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  const ym = monthKey(now);
+  const mt = txns.filter(t => t.date.startsWith(ym));
+  const inc  = sum(mt, 'income');
+  const exp  = sum(mt, 'expense');
+  const net  = inc - exp;
+  const pTot = assets.reduce((s,a) => s + a.cur, 0);
+
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">รายรับเดือนนี้</div>
+      <div class="stat-value positive font-mono">${fmt(inc)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">รายจ่ายเดือนนี้</div>
+      <div class="stat-value negative font-mono">${fmt(exp)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">คงเหลือสุทธิ</div>
+      <div class="stat-value font-mono ${net>=0?'positive':'negative'}">${fmt(net)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Portfolio รวม</div>
+      <div class="stat-value gold font-mono">${fmt(pTot)}</div>
+    </div>
+  `;
+
+  // Chart
+  const months = last6Months(now);
+  const maxV = Math.max(...months.map(m => {
+    const ts = txns.filter(t => t.date.startsWith(m.key));
+    return Math.max(sum(ts,'income'), sum(ts,'expense'));
+  }), 1);
+
+  document.getElementById('dash-chart').innerHTML = months.map(m => {
+    const ts  = txns.filter(t => t.date.startsWith(m.key));
+    const inc = sum(ts, 'income');
+    const exp = sum(ts, 'expense');
+    const h   = 130;
+    return `
+      <div class="chart-col">
+        <div class="chart-bars">
+          <div class="bar income" style="height:${Math.max(inc/maxV*h,0).toFixed(0)}px"></div>
+          <div class="bar expense" style="height:${Math.max(exp/maxV*h,0).toFixed(0)}px"></div>
+        </div>
+        <div class="chart-label">${m.label}</div>
+      </div>`;
+  }).join('');
+
+  // Goals
+  const rTarget = fireNumber();
+  const invGoal = invSet.goal || 5000000;
+  const invPct  = Math.min(pTot / invGoal * 100, 100);
+  const firePct = Math.min(pTot / rTarget * 100, 100);
+
+  document.getElementById('dash-goals').innerHTML = `
+    <div style="margin-bottom:18px">
+      <div class="flex-between">
+        <span style="font-size:13px;font-weight:600">เป้าหมาย Portfolio</span>
+        <span style="font-size:13px;color:var(--text-muted)">${invPct.toFixed(1)}%</span>
+      </div>
+      <div class="stat-sub">${fmt(pTot)} / ${fmt(invGoal)}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${invPct}%"></div></div>
+    </div>
+    <div>
+      <div class="flex-between">
+        <span style="font-size:13px;font-weight:600">FIRE Number</span>
+        <span style="font-size:13px;color:var(--text-muted)">${firePct.toFixed(1)}%</span>
+      </div>
+      <div class="stat-sub">${fmt(pTot)} / ${fmt(rTarget)}</div>
+      <div class="progress-bar"><div class="progress-fill green" style="width:${firePct}%"></div></div>
+    </div>
+  `;
+
+  // Recent
+  const recent = [...txns].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0, 6);
+  document.getElementById('dash-recent').innerHTML = recent.length === 0
+    ? '<div class="empty-state"><div class="empty-icon">📋</div><p>ยังไม่มีรายการ — ไปที่ "รายรับ-รายจ่าย" เพื่อเพิ่มรายการแรก</p></div>'
+    : `<table class="table">
+        <thead><tr><th>วันที่</th><th>รายละเอียด</th><th>หมวด</th><th class="text-right">จำนวน</th></tr></thead>
+        <tbody>${recent.map(t => `
+          <tr>
+            <td style="color:var(--text-muted);font-size:12px;white-space:nowrap">${new Date(t.date).toLocaleDateString('th-TH',{day:'numeric',month:'short'})}</td>
+            <td>${t.note || '—'}</td>
+            <td><span class="tag tag-${t.type}">${t.cat}</span></td>
+            <td class="text-right font-mono ${t.type==='income'?'text-positive':'text-negative'}">${t.type==='income'?'+':'−'}${fmt(t.amount)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+}
+
+// ════════════════════════════════════════════
+//  CASHFLOW
+// ════════════════════════════════════════════
+
+function renderCashflow() {
+  const sel = document.getElementById('month-filter');
+  const opts = last12Months(new Date());
+  const prev = sel.value;
+  sel.innerHTML = opts.map(m => `<option value="${m.key}" ${m.key===prev?'selected':''}>${m.label}</option>`).join('');
+  if (!prev) sel.value = opts[0].key;
+
+  const ym   = sel.value;
+  const all  = txns.filter(t => t.date.startsWith(ym));
+  const inc  = sum(all, 'income');
+  const exp  = sum(all, 'expense');
+  const net  = inc - exp;
+
+  document.getElementById('cf-income').textContent  = fmt(inc);
+  document.getElementById('cf-expense').textContent = fmt(exp);
+  const netEl = document.getElementById('cf-net');
+  netEl.textContent = fmt(net);
+  netEl.className = `stat-value font-mono ${net >= 0 ? 'positive' : 'negative'}`;
+
+  const rows = txns
+    .filter(t => t.date.startsWith(ym) && (txnFilt === 'all' || t.type === txnFilt))
+    .sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  document.getElementById('cf-table').innerHTML = rows.length === 0
+    ? '<div class="empty-state"><div class="empty-icon">💳</div><p>ไม่มีรายการในเดือนนี้</p></div>'
+    : `<table class="table">
+        <thead><tr><th>วันที่</th><th>รายละเอียด</th><th>หมวด</th><th class="text-right">จำนวน</th><th></th></tr></thead>
+        <tbody>${rows.map(t => `
+          <tr>
+            <td style="color:var(--text-muted);font-size:12px;white-space:nowrap">${new Date(t.date).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'})}</td>
+            <td>${t.note || '—'}</td>
+            <td><span class="tag tag-${t.type}">${t.cat}</span></td>
+            <td class="text-right font-mono ${t.type==='income'?'text-positive':'text-negative'}">${t.type==='income'?'+':'−'}${fmt(t.amount)}</td>
+            <td><button class="btn btn-danger" onclick="deleteTxn('${t.id}')">ลบ</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+}
+
+function setFilter(f, el) {
+  txnFilt = f;
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderCashflow();
+}
+
+function updateTxnCats() {
+  const type = document.getElementById('txn-type').value;
+  const cats = type === 'income' ? INCOME_CATS : EXPENSE_CATS;
+  document.getElementById('txn-cat').innerHTML = cats.map(c => `<option>${c}</option>`).join('');
+}
+
+function saveTxn() {
+  const amount = parseFloat(document.getElementById('txn-amount').value);
+  const date   = document.getElementById('txn-date').value;
+  if (!amount || amount <= 0 || !date) { alert('กรุณากรอกจำนวนเงินและวันที่'); return; }
+
+  txns.push({
+    id:     Date.now().toString(),
+    type:   document.getElementById('txn-type').value,
+    cat:    document.getElementById('txn-cat').value,
+    note:   document.getElementById('txn-note').value.trim(),
+    amount, date
+  });
+  save('fp_txns', txns);
+  closeModal('modal-txn');
+  document.getElementById('txn-note').value   = '';
+  document.getElementById('txn-amount').value = '';
+  renderCashflow();
+}
+
+function deleteTxn(id) {
+  if (!confirm('ยืนยันลบรายการนี้?')) return;
+  txns = txns.filter(t => t.id !== id);
+  save('fp_txns', txns);
+  renderCashflow();
+}
+
+// ════════════════════════════════════════════
+//  INVEST
+// ════════════════════════════════════════════
+
+function renderInvest() {
+  const total  = assets.reduce((s,a) => s + a.cur, 0);
+  const cost   = assets.reduce((s,a) => s + a.cost, 0);
+  const pnl    = total - cost;
+  const pnlPct = cost > 0 ? pnl / cost * 100 : 0;
+  const goal   = invSet.goal || 5000000;
+  const gPct   = Math.min(total / goal * 100, 100);
+
+  document.getElementById('inv-total').textContent = fmt(total);
+
+  const pnlEl = document.getElementById('inv-pnl');
+  pnlEl.textContent = fmt(pnl);
+  pnlEl.className = `stat-value font-mono ${pnl >= 0 ? 'positive' : 'negative'}`;
+  document.getElementById('inv-pnl-pct').textContent = cost > 0 ? fmtP(pnlPct) : '';
+
+  document.getElementById('inv-goal-pct').textContent = gPct.toFixed(1) + '%';
+  document.getElementById('inv-goal-txt').textContent = `${fmt(total)} / ${fmt(goal)}`;
+  document.getElementById('inv-goal-bar').style.width = gPct + '%';
+
+  document.getElementById('inv-goal-input').value  = invSet.goal || '';
+  document.getElementById('inv-return-input').value = invSet.ret || 7;
+
+  const denom = total > 0 ? total : 1;
+  document.getElementById('inv-alloc').innerHTML = assets.length === 0
+    ? '<div class="empty-state"><p>กดปุ่ม "จัดการสินทรัพย์" เพื่อเพิ่มข้อมูล</p></div>'
+    : assets.map(a => `
+        <div class="allocation-item">
+          <div class="allocation-dot" style="background:${a.color}"></div>
+          <div class="allocation-name">${a.name}</div>
+          <div class="allocation-amount">${fmt(a.cur)}</div>
+          <div class="allocation-pct">${(a.cur/denom*100).toFixed(0)}%</div>
+        </div>`).join('');
+
+  renderInvProjection(total);
+}
+
+function renderInvProjection(current) {
+  const ret  = (parseFloat(document.getElementById('inv-return-input')?.value) || 7) / 100;
+  const goal = parseFloat(document.getElementById('inv-goal-input')?.value) || 5000000;
+
+  if (ret <= 0 || goal <= current) {
+    document.getElementById('inv-projection').innerHTML =
+      goal <= current
+        ? '<div class="highlight-box green" style="margin-top:12px"><strong>✅ ถึงเป้าหมายแล้ว!</strong></div>'
+        : '';
+    return;
+  }
+
+  let yrs = 0, val = current;
+  while (val < goal && yrs < 100) { val = val * (1 + ret); yrs++; }
+
+  document.getElementById('inv-projection').innerHTML = `
+    <div class="highlight-box" style="margin-top:12px">
+      <div style="font-size:12px;color:var(--brown-light);font-weight:700;margin-bottom:6px">การคาดการณ์ (ไม่รวมออมเพิ่ม)</div>
+      <div style="font-size:14px">ด้วยผลตอบแทน <strong>${(ret*100).toFixed(1)}%</strong>/ปี จะถึงเป้าหมายใน</div>
+      <div style="font-size:26px;font-weight:800;color:var(--gold);margin:4px 0">${yrs} ปี</div>
+      <div style="font-size:12px;color:var(--text-muted)">* เฉพาะมูลค่าปัจจุบัน + compound interest</div>
+    </div>`;
+}
+
+function saveInvSettings() {
+  invSet.goal = parseFloat(document.getElementById('inv-goal-input').value) || 5000000;
+  invSet.ret  = parseFloat(document.getElementById('inv-return-input').value) || 7;
+  save('fp_invset', invSet);
+  renderInvProjection(assets.reduce((s,a) => s + a.cur, 0));
+}
+
+function openAssetModal() {
+  tempAssets = JSON.parse(JSON.stringify(assets));
+  renderAssetRows();
+}
+
+function renderAssetRows() {
+  document.getElementById('asset-rows').innerHTML = tempAssets.map((a,i) => `
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:6px;margin-bottom:8px;align-items:center">
+      <input class="form-input" value="${a.name}" placeholder="ชื่อสินทรัพย์"
+             oninput="tempAssets[${i}].name=this.value" style="font-size:13px;padding:7px 10px">
+      <input type="number" class="form-input" value="${a.cost}" placeholder="0"
+             oninput="tempAssets[${i}].cost=+this.value" style="font-size:13px;padding:7px 10px">
+      <input type="number" class="form-input" value="${a.cur}" placeholder="0"
+             oninput="tempAssets[${i}].cur=+this.value" style="font-size:13px;padding:7px 10px">
+      <button class="btn btn-danger" onclick="tempAssets.splice(${i},1);renderAssetRows()">×</button>
+    </div>`).join('');
+}
+
+function addAssetRow() {
+  tempAssets.push({ name:'', cost:0, cur:0, color: PALETTE[tempAssets.length % PALETTE.length] });
+  renderAssetRows();
+}
+
+function saveAssets() {
+  assets = tempAssets.filter(a => a.name.trim());
+  assets.forEach((a,i) => { if (!a.color) a.color = PALETTE[i % PALETTE.length]; });
+  save('fp_assets', assets);
+  closeModal('modal-asset');
+  renderInvest();
+}
+
+// ════════════════════════════════════════════
+//  TAX
+// ════════════════════════════════════════════
+
+function renderTax() {
+  if (!document.getElementById('t-income').value) {
+    document.getElementById('t-income').value = 600000;
+    document.getElementById('t-social').value = 9000;
+  }
+  renderBrackets();
+  calcTax();
+}
+
+function renderBrackets() {
+  document.getElementById('tax-brackets-display').innerHTML = TAX_BRACKETS.map(b => `
+    <div class="tax-row" style="font-size:13px">
+      <span style="color:var(--text-muted)">
+        ${b.ceil === Infinity ? 'มากกว่า 5,000,000' : `0 – ${fmtN(b.ceil)}`} บาท
+      </span>
+      <span style="font-weight:600">${(b.rate*100).toFixed(0)}%</span>
+    </div>`).join('');
+}
+
+function calcTax() {
+  const income    = +document.getElementById('t-income').value   || 0;
+  const lifeIns   = Math.min(+document.getElementById('t-life').value   || 0, 100000);
+  const healthIns = Math.min(+document.getElementById('t-health').value || 0, 25000);
+  const parentIns = Math.min(+document.getElementById('t-parent').value || 0, 15000);
+  const ssfRaw    = +document.getElementById('t-ssf').value  || 0;
+  const rmfRaw    = +document.getElementById('t-rmf').value  || 0;
+  const pvd       = Math.min(+document.getElementById('t-pvd').value || 0, 500000);
+  const social    = +document.getElementById('t-social').value  || 0;
+  const mortgage  = Math.min(+document.getElementById('t-mortgage').value || 0, 100000);
+  const donateRaw = +document.getElementById('t-donate').value || 0;
+  const children  = parseInt(document.getElementById('t-child').value) || 0;
+
+  // Deductions
+  const expDeduct   = Math.min(income * 0.5, 100000);
+  const personal    = 60000;
+  const childAllow  = children > 0 ? 30000 + Math.max(0, children-1) * 60000 : 0;
+  const ssfMax      = Math.min(income * 0.3, 200000);
+  const ssf         = Math.min(ssfRaw, ssfMax);
+  const retireRoom  = Math.max(0, 500000 - ssf - pvd);
+  const rmf         = Math.min(rmfRaw, retireRoom);
+
+  let net = income - expDeduct - personal - childAllow - social - lifeIns - healthIns - parentIns - ssf - rmf - pvd - mortgage;
+  const donateMax = Math.max(0, net * 0.10);
+  const donate    = Math.min(donateRaw, donateMax);
+  net = Math.max(0, net - donate);
+
+  const tax        = taxFromNet(net);
+  const margRate   = getMarginal(net);
+  const effRate    = income > 0 ? tax / income * 100 : 0;
+
+  // Baseline (no optional deductions)
+  const baseNet = Math.max(0, income - expDeduct - personal - social);
+  const baseTax = taxFromNet(baseNet);
+  const saved   = baseTax - tax;
+
+  // Totals of deductions used
+  const totalDeduct = expDeduct + personal + childAllow + social + lifeIns + healthIns + parentIns + ssf + rmf + pvd + mortgage + donate;
+
+  document.getElementById('tax-result').innerHTML = `
+    <div class="tax-row" style="color:var(--text-muted);font-size:13px">
+      <span>รายได้รวม</span><span class="font-mono">${fmt(income)}</span>
+    </div>
+    <div class="tax-row" style="color:var(--text-muted);font-size:13px">
+      <span>หักค่าใช้จ่าย (50%, max 100K)</span>
+      <span class="font-mono">−${fmt(expDeduct)}</span>
+    </div>
+    <div class="tax-row" style="color:var(--text-muted);font-size:13px">
+      <span>ลดหย่อนส่วนตัว + ทั้งหมด</span>
+      <span class="font-mono">−${fmt(totalDeduct - expDeduct)}</span>
+    </div>
+    <div class="tax-row font-bold">
+      <span>เงินได้สุทธิ</span><span class="font-mono">${fmt(net)}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="tax-row" style="font-size:22px;font-weight:800;color:var(--red)">
+      <span>ภาษีที่ต้องจ่าย</span><span class="font-mono">${fmt(tax)}</span>
+    </div>
+    <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
+      <span>อัตราภาษีที่แท้จริง</span><span>${effRate.toFixed(2)}%</span>
+    </div>
+    <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
+      <span>Marginal rate (ขั้นบันไดสูงสุด)</span><span>${(margRate*100).toFixed(0)}%</span>
+    </div>
+    ${saved > 0 ? `
+    <div class="divider"></div>
+    <div class="tax-row" style="color:var(--green);font-weight:700;font-size:15px">
+      <span>ประหยัดภาษีจากลดหย่อน</span>
+      <span class="font-mono">−${fmt(saved)}</span>
+    </div>` : ''}
+  `;
+
+  // Tips
+  const tips = [];
+  const ssfRoom  = Math.max(0, ssfMax - ssf);
+  const rmfRoom  = Math.max(0, 500000 - ssf - rmf - pvd);
+  const lifeRoom = Math.max(0, 100000 - lifeIns);
+  const hRoom    = Math.max(0, 25000 - healthIns);
+  const pRoom    = Math.max(0, 15000 - parentIns);
+
+  if (ssfRoom > 0 && margRate >= 0.1)
+    tips.push(`เพิ่ม SSF ได้อีก ${fmt(ssfRoom)} → ประหยัดภาษีประมาณ ${fmt(ssfRoom * margRate)}`);
+  if (rmfRoom > 0 && margRate >= 0.1)
+    tips.push(`เพิ่ม RMF ได้อีก ${fmt(rmfRoom)} → ประหยัดภาษีประมาณ ${fmt(rmfRoom * margRate)}`);
+  if (lifeRoom > 0 && margRate >= 0.05)
+    tips.push(`ประกันชีวิตลดหย่อนได้อีก ${fmt(lifeRoom)} (ประหยัด ${fmt(lifeRoom * margRate)})`);
+  if (hRoom > 0)
+    tips.push(`ประกันสุขภาพตัวเองลดหย่อนได้อีก ${fmt(hRoom)}`);
+  if (pRoom > 0)
+    tips.push(`ประกันสุขภาพพ่อแม่ลดหย่อนได้อีก ${fmt(pRoom)} (ถ้ามีผู้ปกครองที่ดูแล)`);
+  if (tips.length === 0)
+    tips.push('คุณใช้สิทธิ์ลดหย่อนได้เต็มที่หรือใกล้เคียงแล้ว');
+
+  document.getElementById('tax-tips').innerHTML =
+    tips.map(t => `<div class="tip-item"><span>💡</span><span>${t}</span></div>`).join('');
+}
+
+function taxFromNet(net) {
+  if (net <= 0) return 0;
+  let tax = 0, prev = 0;
+  for (const b of TAX_BRACKETS) {
+    if (net <= prev) break;
+    tax += (Math.min(net, b.ceil) - prev) * b.rate;
+    prev = b.ceil;
+  }
+  return Math.max(0, tax);
+}
+
+function getMarginal(net) {
+  for (const b of TAX_BRACKETS) { if (net <= b.ceil) return b.rate; }
+  return 0.35;
+}
+
+// ════════════════════════════════════════════
+//  RETIRE
+// ════════════════════════════════════════════
+
+function fireNumber() {
+  const spend    = parseFloat(document.getElementById('r-spend')?.value   || 50000);
+  const age      = parseFloat(document.getElementById('r-age')?.value     || 32);
+  const retAge   = parseFloat(document.getElementById('r-ret-age')?.value || 55);
+  const inf      = (parseFloat(document.getElementById('r-inf')?.value    || 3)) / 100;
+  const yrs      = Math.max(0, retAge - age);
+  const futSpend = spend * Math.pow(1 + inf, yrs) * 12;
+  return futSpend / 0.04;
+}
+
+function calcRetire() {
+  const age      = parseFloat(document.getElementById('r-age').value)     || 32;
+  const retAge   = parseFloat(document.getElementById('r-ret-age').value) || 55;
+  const spend    = parseFloat(document.getElementById('r-spend').value)   || 50000;
+  const current  = parseFloat(document.getElementById('r-current').value) || 0;
+  const monthly  = parseFloat(document.getElementById('r-monthly').value) || 10000;
+  const retPct   = (parseFloat(document.getElementById('r-return').value) || 7) / 100;
+  const infPct   = (parseFloat(document.getElementById('r-inf').value)    || 3) / 100;
+  const lifeAge  = parseFloat(document.getElementById('r-life').value)    || 85;
+
+  const yToRet  = Math.max(0, retAge - age);
+  const retYrs  = Math.max(0, lifeAge - retAge);
+
+  // Future value at retirement
+  const fvNow  = current * Math.pow(1 + retPct, yToRet);
+  const fvSave = yToRet > 0
+    ? monthly * 12 * ((Math.pow(1 + retPct, yToRet) - 1) / retPct)
+    : 0;
+  const projected = fvNow + fvSave;
+
+  // Needed at retirement (PV of inflation-adjusted annuity)
+  const annSpend    = spend * 12 * Math.pow(1 + infPct, yToRet);
+  const realRet     = (1 + retPct) / (1 + infPct) - 1;
+  const needed      = Math.abs(realRet) < 0.0001
+    ? annSpend * retYrs
+    : annSpend * (1 - Math.pow(1 + realRet, -retYrs)) / realRet;
+
+  const gap    = needed - projected;
+  const onTrk  = projected >= needed;
+
+  const reqMonthly = gap > 0 && yToRet > 0
+    ? gap / (((Math.pow(1 + retPct, yToRet) - 1) / retPct) * 12)
+    : 0;
+
+  const fire = annSpend / 0.04;
+
+  document.getElementById('retire-result').innerHTML = `
+    <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
+      <span>ปีที่เหลือก่อนเกษียณ</span><span style="font-weight:700;color:var(--brown)">${yToRet} ปี</span>
+    </div>
+    <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
+      <span>ค่าใช้จ่ายต่อปีตอนเกษียณ (รวมเงินเฟ้อ)</span>
+      <span class="font-mono">${fmt(annSpend)}</span>
+    </div>
+    <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
+      <span>เงินที่ต้องมีตอนเกษียณ</span>
+      <span class="font-mono font-bold">${fmt(needed)}</span>
+    </div>
+    <div class="tax-row" style="font-size:13px">
+      <span>คาดการณ์เงินตอนเกษียณ</span>
+      <span class="font-mono ${onTrk?'text-positive':'text-negative'} font-bold">${fmt(projected)}</span>
+    </div>
+    <div class="divider"></div>
+    <div class="highlight-box ${onTrk?'green':'red'}">
+      ${onTrk
+        ? `<div style="font-weight:700;color:var(--green);font-size:15px">✅ On Track!</div>
+           <div style="font-size:13px;margin-top:4px">แผนปัจจุบันเพียงพอสำหรับเกษียณตามเป้าหมาย</div>`
+        : `<div style="font-weight:700;color:var(--red);font-size:15px">⚠️ ขาดอยู่ ${fmt(gap)}</div>
+           <div style="font-size:13px;margin-top:4px">ต้องออมเพิ่มเดือนละ <strong>${fmt(reqMonthly)}</strong> เพื่อให้ถึงเป้า</div>`}
+    </div>
+    <div class="progress-bar" style="margin-top:12px;height:9px">
+      <div class="progress-fill ${onTrk?'green':''}" style="width:${Math.min(projected/needed*100,100).toFixed(1)}%"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${Math.min(projected/needed*100,100).toFixed(1)}% ของเป้าหมายเกษียณ</div>
+  `;
+
+  document.getElementById('retire-fire').innerHTML = `
+    <div style="margin-bottom:10px">
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">4% Safe Withdrawal Rule — เงินที่ต้องมีเพื่อให้ถอนใช้ได้ตลอดชีวิต</div>
+      <div style="font-size:30px;font-weight:800;color:var(--gold)">${fmt(fire)}</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">= ${fmt(annSpend/12)}/เดือน × 12 ÷ 4%</div>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:10px">
+      หากลงทุนได้ผลตอบแทนเฉลี่ย ~7%/ปี เงิน ${fmt(fire)} จะสร้างกระแสเงินได้ที่ถอนออกมาได้โดยไม่หมดตลอดชีวิต
+    </div>
+  `;
+
+  // Milestones
+  const milestones = [0.25, 0.5, 0.75, 1.0].map(pct => {
+    const target = needed * pct;
+    if (current >= target) return { pct, target, year: 0, reached: true };
+    let val = current, yr = 0;
+    while (val < target && yr < 100) {
+      val = val * (1 + retPct) + monthly * 12;
+      yr++;
+    }
+    return { pct, target, year: yr, reached: false };
+  });
+
+  document.getElementById('retire-milestones').innerHTML = `
+    <table class="table">
+      <thead><tr><th>Milestone</th><th>จำนวน (บาท)</th><th>ปีที่ถึง</th><th>สถานะ</th></tr></thead>
+      <tbody>${milestones.map(m => `
+        <tr>
+          <td>${(m.pct*100).toFixed(0)}% ของเป้าหมาย</td>
+          <td class="font-mono">${fmt(m.target)}</td>
+          <td>${m.reached ? '—' : `ปีที่ ${m.year} (~${new Date().getFullYear()+m.year})`}</td>
+          <td>${m.reached ? '<span class="tag tag-income">✅ ถึงแล้ว</span>' : '<span class="tag tag-expense">ยังไม่ถึง</span>'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+// ════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════
+
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modal-txn') {
+    document.getElementById('txn-date').value = new Date().toISOString().split('T')[0];
+    updateTxnCats();
+  }
+  if (id === 'modal-asset') openAssetModal();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════
+
+function monthKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function sum(arr, type) {
+  return arr.filter(t => t.type === type).reduce((s,t) => s + t.amount, 0);
+}
+
+function last6Months(now) {
+  return Array.from({length:6}, (_,i) => {
+    const d = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
+    return { key: monthKey(d), label: d.toLocaleDateString('th-TH',{month:'short'}) };
+  });
+}
+
+function last12Months(now) {
+  return Array.from({length:12}, (_,i) => {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    return { key: monthKey(d), label: d.toLocaleDateString('th-TH',{year:'numeric',month:'long'}) };
+  });
+}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+
+renderDashboard();
+</script>
+</body>
+</html>
