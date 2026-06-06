@@ -6,162 +6,55 @@
 <title>FinPlan — วางแผนการเงิน</title>
 <style>
   :root {
-    --bg: #FAF7F0;
-    --surface: #FFFFFF;
-    --surface2: #F5F0E8;
-    --gold: #B8860B;
-    --gold-light: #D4A853;
-    --gold-pale: #F9F0DC;
-    --brown: #5C3D11;
-    --brown-light: #8B5E3C;
-    --text: #2C1A0E;
-    --text-muted: #7A6250;
-    --green: #3D7A52;
-    --green-pale: #E8F5EE;
-    --red: #B85450;
-    --red-pale: #FCF0EF;
-    --border: #E8DDD0;
-    --radius: 12px;
+    --bg: #FAF7F0; --surface: #FFFFFF; --surface2: #F5F0E8;
+    --gold: #B8860B; --gold-light: #D4A853; --gold-pale: #F9F0DC;
+    --brown: #5C3D11; --brown-light: #8B5E3C;
+    --text: #2C1A0E; --text-muted: #7A6250;
+    --green: #3D7A52; --green-pale: #E8F5EE;
+    --red: #B85450; --red-pale: #FCF0EF;
+    --yellow: #856404; --yellow-pale: #FFF8E1;
+    --border: #E8DDD0; --radius: 12px;
     --shadow: 0 2px 8px rgba(92,61,17,0.08);
     --shadow-lg: 0 8px 32px rgba(92,61,17,0.14);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans Thai', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    font-size: 15px;
-    line-height: 1.5;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; font-size: 15px; line-height: 1.5;
   }
 
   /* ── Sidebar ── */
   .sidebar {
-    width: 220px;
-    min-height: 100vh;
-    background: var(--brown);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0; left: 0;
-    z-index: 100;
+    width: 220px; min-height: 100vh; background: var(--brown);
+    display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100;
   }
-
-  .sidebar-logo {
-    padding: 28px 20px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .sidebar-logo h1 {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--gold-light);
-    letter-spacing: 3px;
-  }
-
-  .sidebar-logo p {
-    font-size: 11px;
-    color: rgba(255,255,255,0.45);
-    margin-top: 3px;
-  }
-
-  .sidebar-nav {
-    flex: 1;
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
+  .sidebar-logo { padding: 24px 20px 18px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-logo h1 { font-size: 20px; font-weight: 800; color: var(--gold-light); letter-spacing: 3px; }
+  .sidebar-logo p { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; }
+  .sidebar-nav { flex: 1; padding: 14px 12px; display: flex; flex-direction: column; gap: 3px; }
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    color: rgba(255,255,255,0.58);
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.15s;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    font-family: inherit;
+    display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+    border-radius: 8px; cursor: pointer; color: rgba(255,255,255,0.58);
+    font-size: 14px; font-weight: 500; transition: all 0.15s;
+    border: none; background: none; width: 100%; text-align: left; font-family: inherit;
   }
-
   .nav-item:hover { background: rgba(255,255,255,0.09); color: white; }
-
-  .nav-item.active {
-    background: var(--gold-light);
-    color: var(--brown);
-    font-weight: 700;
-  }
-
+  .nav-item.active { background: var(--gold-light); color: var(--brown); font-weight: 700; }
   .nav-icon { font-size: 17px; flex-shrink: 0; }
-
-  .sidebar-footer {
-    padding: 14px 20px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    font-size: 11px;
-    color: rgba(255,255,255,0.28);
-  }
+  .sidebar-footer { padding: 12px 20px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.28); }
 
   /* ── Main ── */
-  .main {
-    margin-left: 220px;
-    flex: 1;
-    min-height: 100vh;
-  }
-
-  .page-header {
-    padding: 28px 32px 0;
-    margin-bottom: 4px;
-  }
-
-  .page-header h2 {
-    font-size: 23px;
-    font-weight: 700;
-    color: var(--brown);
-  }
-
-  .page-header p {
-    color: var(--text-muted);
-    margin-top: 3px;
-    font-size: 14px;
-  }
-
-  .content {
-    padding: 20px 32px 48px;
-  }
+  .main { margin-left: 220px; flex: 1; min-height: 100vh; }
+  .page-header { padding: 26px 32px 0; margin-bottom: 4px; }
+  .page-header h2 { font-size: 23px; font-weight: 700; color: var(--brown); }
+  .page-header p { color: var(--text-muted); margin-top: 3px; font-size: 14px; }
+  .content { padding: 18px 32px 48px; }
 
   /* ── Cards ── */
-  .card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-  }
-
-  .card-header {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .card-header h3 {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--brown);
-    letter-spacing: 0.2px;
-  }
-
+  .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+  .card-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .card-header h3 { font-size: 14px; font-weight: 700; color: var(--brown); }
   .card-body { padding: 20px; }
 
   /* ── Grid ── */
@@ -170,168 +63,59 @@
   .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
 
   /* ── Stat cards ── */
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    box-shadow: var(--shadow);
-  }
-
-  .stat-label {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    font-weight: 600;
-  }
-
-  .stat-value {
-    font-size: 25px;
-    font-weight: 700;
-    margin-top: 5px;
-    color: var(--brown);
-  }
-
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow); }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+  .stat-value { font-size: 25px; font-weight: 700; margin-top: 5px; color: var(--brown); }
   .stat-value.positive { color: var(--green); }
   .stat-value.negative { color: var(--red); }
   .stat-value.gold { color: var(--gold); }
-
-  .stat-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 3px;
-  }
+  .stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
 
   /* ── Forms ── */
   .form-group { margin-bottom: 14px; }
-
-  .form-label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--brown-light);
-    margin-bottom: 5px;
-    letter-spacing: 0.2px;
-  }
-
+  .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--brown-light); margin-bottom: 5px; letter-spacing: 0.2px; }
   .form-input, .form-select {
-    width: 100%;
-    padding: 9px 13px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--surface);
-    transition: border-color 0.15s, box-shadow 0.15s;
-    outline: none;
-    font-family: inherit;
+    width: 100%; padding: 9px 13px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; color: var(--text); background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s; outline: none; font-family: inherit;
   }
-
-  .form-input:focus, .form-select:focus {
-    border-color: var(--gold-light);
-    box-shadow: 0 0 0 3px rgba(212,168,83,0.14);
-  }
+  .form-input:focus, .form-select:focus { border-color: var(--gold-light); box-shadow: 0 0 0 3px rgba(212,168,83,0.14); }
 
   /* ── Buttons ── */
-  .btn {
-    padding: 9px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-    font-family: inherit;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-
+  .btn { padding: 9px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; display: inline-flex; align-items: center; gap: 6px; }
   .btn-primary { background: var(--gold); color: white; }
   .btn-primary:hover { background: var(--brown); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--brown-light);
-    border: 1.5px solid var(--border);
-  }
+  .btn-ghost { background: transparent; color: var(--brown-light); border: 1.5px solid var(--border); }
   .btn-ghost:hover { border-color: var(--gold-light); color: var(--gold); }
-
-  .btn-danger {
-    background: transparent;
-    color: var(--red);
-    border: 1.5px solid #E8A09D;
-    padding: 5px 11px;
-    font-size: 12px;
-    border-radius: 6px;
-  }
+  .btn-danger { background: transparent; color: var(--red); border: 1.5px solid #E8A09D; padding: 5px 11px; font-size: 12px; border-radius: 6px; }
   .btn-danger:hover { background: var(--red-pale); }
-
   .btn-sm { padding: 6px 14px; font-size: 13px; }
 
   /* ── Table ── */
   .table { width: 100%; border-collapse: collapse; }
-
-  .table th {
-    text-align: left;
-    padding: 9px 14px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    border-bottom: 1.5px solid var(--border);
-    text-transform: uppercase;
-    letter-spacing: 0.4px;
-  }
-
-  .table td {
-    padding: 11px 14px;
-    font-size: 14px;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .table th { text-align: left; padding: 9px 14px; font-size: 11px; font-weight: 700; color: var(--text-muted); border-bottom: 1.5px solid var(--border); text-transform: uppercase; letter-spacing: 0.4px; }
+  .table td { padding: 11px 14px; font-size: 14px; border-bottom: 1px solid var(--border); }
   .table tr:last-child td { border-bottom: none; }
   .table tbody tr:hover td { background: var(--surface2); }
 
   /* ── Tags ── */
-  .tag {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-  }
-
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; }
   .tag-income { background: var(--green-pale); color: var(--green); }
   .tag-expense { background: var(--red-pale); color: var(--red); }
 
   /* ── Progress ── */
-  .progress-bar {
-    height: 7px;
-    background: var(--surface2);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-top: 8px;
-  }
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 4px;
-    background: var(--gold);
-    transition: width 0.5s ease;
-  }
-
+  .progress-bar { height: 7px; background: var(--surface2); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; border-radius: 4px; background: var(--gold); transition: width 0.5s ease; }
   .progress-fill.green { background: var(--green); }
+  .progress-fill.yellow { background: #F0A500; }
   .progress-fill.red { background: var(--red); }
 
   /* ── Utilities ── */
   .section { margin-bottom: 20px; }
   .flex { display: flex; }
   .flex-between { display: flex; justify-content: space-between; align-items: center; }
-  .gap-8 { gap: 8px; }
-  .gap-12 { gap: 12px; }
-  .mt-12 { margin-top: 12px; }
-  .mt-16 { margin-top: 16px; }
+  .gap-8 { gap: 8px; } .gap-12 { gap: 12px; }
+  .mt-12 { margin-top: 12px; } .mt-16 { margin-top: 16px; }
   .text-right { text-align: right; }
   .text-positive { color: var(--green); font-weight: 600; }
   .text-negative { color: var(--red); font-weight: 600; }
@@ -344,222 +128,172 @@
   .page.active { display: block; }
 
   /* ── Sub-tabs ── */
-  .sub-tabs {
-    display: flex;
-    gap: 3px;
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 3px;
-    width: fit-content;
-  }
-
-  .sub-tab {
-    padding: 6px 15px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    background: none;
-    color: var(--text-muted);
-    transition: all 0.15s;
-    font-family: inherit;
-  }
-
-  .sub-tab.active {
-    background: white;
-    color: var(--brown);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.09);
-  }
+  .sub-tabs { display: flex; gap: 3px; background: var(--surface2); border-radius: 8px; padding: 3px; width: fit-content; }
+  .sub-tab { padding: 6px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: none; color: var(--text-muted); transition: all 0.15s; font-family: inherit; }
+  .sub-tab.active { background: white; color: var(--brown); box-shadow: 0 1px 4px rgba(0,0,0,0.09); }
 
   /* ── Highlight box ── */
-  .highlight-box {
-    background: var(--gold-pale);
-    border: 1px solid #DFC07A;
-    border-radius: 10px;
-    padding: 14px 18px;
-  }
-
-  .highlight-box.green {
-    background: var(--green-pale);
-    border-color: #8DC8A8;
-  }
-
-  .highlight-box.red {
-    background: var(--red-pale);
-    border-color: #E8A09D;
-  }
+  .highlight-box { background: var(--gold-pale); border: 1px solid #DFC07A; border-radius: 10px; padding: 14px 18px; }
+  .highlight-box.green { background: var(--green-pale); border-color: #8DC8A8; }
+  .highlight-box.red { background: var(--red-pale); border-color: #E8A09D; }
 
   /* ── Tips ── */
-  .tip-item {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    background: var(--green-pale);
-    border: 1px solid #A8D5B5;
-    border-radius: 8px;
-    padding: 11px 14px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    color: #2A5E3E;
-  }
+  .tip-item { display: flex; gap: 10px; align-items: flex-start; background: var(--green-pale); border: 1px solid #A8D5B5; border-radius: 8px; padding: 11px 14px; margin-bottom: 8px; font-size: 13px; color: #2A5E3E; }
 
   /* ── Tax rows ── */
-  .tax-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-
+  .tax-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .tax-row:last-child { border-bottom: none; }
 
   /* ── Asset allocation ── */
-  .allocation-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
+  .allocation-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .allocation-item:last-child { border-bottom: none; }
-
-  .allocation-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
+  .allocation-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
   .allocation-name { flex: 1; font-size: 14px; }
   .allocation-amount { font-size: 14px; font-weight: 600; color: var(--brown); }
   .allocation-pct { font-size: 12px; color: var(--text-muted); min-width: 38px; text-align: right; }
 
   /* ── Chart ── */
-  .chart-wrap {
-    display: flex;
-    align-items: flex-end;
-    gap: 6px;
-    height: 150px;
-    padding: 0 4px;
-  }
-
-  .chart-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    justify-content: flex-end;
-    gap: 6px;
-  }
-
-  .chart-bars {
-    display: flex;
-    gap: 3px;
-    align-items: flex-end;
-    width: 100%;
-    justify-content: center;
-  }
-
-  .bar {
-    width: 13px;
-    border-radius: 3px 3px 0 0;
-    min-height: 0;
-  }
-
+  .chart-wrap { display: flex; align-items: flex-end; gap: 6px; height: 150px; padding: 0 4px; }
+  .chart-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; gap: 6px; }
+  .chart-bars { display: flex; gap: 3px; align-items: flex-end; width: 100%; justify-content: center; }
+  .bar { width: 13px; border-radius: 3px 3px 0 0; min-height: 0; }
   .bar.income { background: var(--green); opacity: 0.82; }
   .bar.expense { background: var(--red); opacity: 0.75; }
-
-  .chart-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  /* ── Donut ring (CSS only) ── */
-  .donut-ring {
-    position: relative;
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 16px;
-  }
+  .chart-label { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
 
   /* ── Modal ── */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(44,26,14,0.42);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-  }
-
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(44,26,14,0.42); z-index: 200; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: white;
-    border-radius: 16px;
-    width: 500px;
-    max-width: 95vw;
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
-    animation: slideUp 0.2s ease;
-  }
-
-  @keyframes slideUp {
-    from { transform: translateY(16px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-
-  .modal-header {
-    padding: 18px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
+  .modal { background: white; border-radius: 16px; width: 520px; max-width: 95vw; box-shadow: var(--shadow-lg); overflow: hidden; animation: slideUp 0.2s ease; }
+  @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
   .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--brown); }
-
-  .modal-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 22px;
-    color: var(--text-muted);
-    line-height: 1;
-    padding: 0 2px;
-  }
-
-  .modal-body { padding: 22px 24px; max-height: 70vh; overflow-y: auto; }
-
-  .modal-footer {
-    padding: 14px 24px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
+  .modal-close { background: none; border: none; cursor: pointer; font-size: 22px; color: var(--text-muted); line-height: 1; padding: 0 2px; }
+  .modal-body { padding: 22px 24px; max-height: 75vh; overflow-y: auto; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
 
   /* ── Empty state ── */
-  .empty-state {
-    text-align: center;
-    padding: 36px 20px;
-    color: var(--text-muted);
-  }
-
+  .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
   .empty-icon { font-size: 36px; margin-bottom: 10px; }
 
   /* ── Divider ── */
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 12px 0;
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  /* ══════════════════════════════════
+     BUDGET PAGE
+  ══════════════════════════════════ */
+  .budget-cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
   }
+  .budget-cat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .budget-cat-name { font-size: 14px; font-weight: 700; color: var(--brown); }
+  .budget-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge-ok   { background: var(--green-pale); color: var(--green); }
+  .badge-warn { background: var(--yellow-pale); color: var(--yellow); }
+  .badge-over { background: var(--red-pale); color: var(--red); }
+  .badge-none { background: var(--surface2); color: var(--text-muted); }
+  .budget-amounts {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin: 6px 0;
+  }
+  .budget-bar { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .budget-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+  .budget-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .budget-input-row label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .budget-input-row input { flex: 1; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; outline: none; }
+  .budget-input-row input:focus { border-color: var(--gold-light); }
+
+  /* ══════════════════════════════════
+     SCAN SLIP
+  ══════════════════════════════════ */
+  .scan-section {
+    background: var(--surface2);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: all 0.15s;
+  }
+  .scan-section.drag-over { border-color: var(--gold-light); background: var(--gold-pale); }
+  .scan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .scan-title { font-size: 13px; font-weight: 700; color: var(--brown-light); }
+  .scan-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  .scan-btn:hover { background: var(--brown); }
+  .scan-btn:disabled { background: #ccc; cursor: not-allowed; }
+  .scan-preview-wrap { text-align: center; }
+  .scan-preview { max-width: 100%; max-height: 180px; border-radius: 8px; margin-bottom: 8px; display: block; margin: 0 auto 8px; }
+  .ocr-status-bar {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 6px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ocr-badge {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--gold-pale);
+    color: var(--gold);
+    border: 1px solid var(--gold-light);
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .scan-empty-hint {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  .scan-empty-hint .big { font-size: 28px; display: block; margin-bottom: 4px; }
 
   /* ── Responsive ── */
   @media (max-width: 800px) {
@@ -590,6 +324,9 @@
     <button class="nav-item" onclick="goTo('cashflow')">
       <span class="nav-icon">💸</span><span>รายรับ-รายจ่าย</span>
     </button>
+    <button class="nav-item" onclick="goTo('budget')">
+      <span class="nav-icon">💰</span><span>งบการเงิน</span>
+    </button>
     <button class="nav-item" onclick="goTo('invest')">
       <span class="nav-icon">📈</span><span>ลงทุน</span>
     </button>
@@ -598,6 +335,9 @@
     </button>
     <button class="nav-item" onclick="goTo('retire')">
       <span class="nav-icon">🌿</span><span>เกษียณ</span>
+    </button>
+    <button class="nav-item" onclick="goTo('insure')">
+      <span class="nav-icon">🛡️</span><span>ประกัน</span>
     </button>
   </nav>
   <div class="sidebar-footer">ข้อมูลบันทึกในเครื่อง</div>
@@ -677,6 +417,27 @@
     </div>
   </div>
 
+  <!-- ══════════ BUDGET ══════════ -->
+  <div id="page-budget" class="page">
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h2>งบการเงิน</h2>
+          <p>ตั้งงบประมาณแต่ละหมวดและเทียบกับรายจ่ายจริง</p>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:13px;color:var(--text-muted)">เดือน:</span>
+          <select class="form-select" style="width:auto;padding:6px 10px;font-size:13px" id="budget-month" onchange="renderBudget()"></select>
+          <button class="btn btn-primary" onclick="saveBudgets()">💾 บันทึกงบ</button>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-4 section" id="budget-stats"></div>
+      <div class="grid-3" id="budget-cats"></div>
+    </div>
+  </div>
+
   <!-- ══════════ INVEST ══════════ -->
   <div id="page-invest" class="page">
     <div class="page-header">
@@ -737,7 +498,6 @@
     </div>
     <div class="content">
       <div class="grid-2 section">
-        <!-- Left: inputs -->
         <div>
           <div class="card">
             <div class="card-header"><h3>รายได้และการหักลดหย่อน</h3></div>
@@ -760,14 +520,19 @@
                 <label class="form-label">ประกันสุขภาพ — พ่อแม่ (max 15,000 บาท)</label>
                 <input type="number" class="form-input" id="t-parent" placeholder="0" oninput="calcTax()">
               </div>
+              <div class="form-group">
+                <label class="form-label">ประกันบำนาญ (max 15% รายได้, ไม่เกิน 200,000 บาท)</label>
+                <input type="number" class="form-input" id="t-pension" placeholder="0" oninput="calcTax()">
+                <div style="font-size:11px;color:var(--text-muted);margin-top:4px">* นับรวมกับ SSF+RMF+PVD ต้องไม่เกิน 500,000 บาท</div>
+              </div>
               <div class="divider"></div>
-              <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">กองทุนเพื่อการเกษียณ</div>
+              <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">กองทุนเพื่อการเกษียณ (รวมประกันบำนาญ ≤ 500,000)</div>
               <div class="form-group">
                 <label class="form-label">SSF (max 30% รายได้, ไม่เกิน 200,000 บาท)</label>
                 <input type="number" class="form-input" id="t-ssf" placeholder="0" oninput="calcTax()">
               </div>
               <div class="form-group">
-                <label class="form-label">RMF (SSF+RMF+PVD รวมไม่เกิน 500,000 บาท)</label>
+                <label class="form-label">RMF (SSF+RMF+PVD+บำนาญ รวมไม่เกิน 500,000 บาท)</label>
                 <input type="number" class="form-input" id="t-rmf" placeholder="0" oninput="calcTax()">
               </div>
               <div class="form-group">
@@ -795,7 +560,6 @@
             </div>
           </div>
         </div>
-        <!-- Right: results -->
         <div>
           <div class="card section">
             <div class="card-header"><h3>ผลการคำนวณภาษี</h3></div>
@@ -812,6 +576,38 @@
             <div class="card-body" id="tax-tips">
               <p style="font-size:13px;color:var(--text-muted)">กรอกข้อมูลเพื่อดูคำแนะนำ</p>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ INSURE ══════════ -->
+  <div id="page-insure" class="page">
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h2>วางแผนประกัน</h2>
+          <p>บริหารกรมธรรม์และดูสิทธิ์ลดหย่อนภาษีจากประกัน</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddInsure()">+ เพิ่มกรมธรรม์</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-4 section" id="insure-stats"></div>
+      <div class="grid-2 section">
+        <div class="card">
+          <div class="card-header"><h3>กรมธรรม์ทั้งหมด</h3></div>
+          <div id="insure-list"></div>
+        </div>
+        <div>
+          <div class="card section">
+            <div class="card-header"><h3>📊 สิทธิ์ลดหย่อนภาษีจากประกัน</h3></div>
+            <div class="card-body" id="insure-tax-summary"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>💡 เกณฑ์ความคุ้มครองที่แนะนำ</h3></div>
+            <div class="card-body" id="insure-guide"></div>
           </div>
         </div>
       </div>
@@ -885,7 +681,7 @@
 
 </main>
 
-<!-- ══ MODAL: Transaction ══ -->
+<!-- ══ MODAL: Transaction (with Scan) ══ -->
 <div class="modal-overlay" id="modal-txn">
   <div class="modal">
     <div class="modal-header">
@@ -893,6 +689,29 @@
       <button class="modal-close" onclick="closeModal('modal-txn')">×</button>
     </div>
     <div class="modal-body">
+
+      <!-- Scan Zone -->
+      <div class="scan-section" id="scan-section"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <div class="scan-header">
+          <span class="scan-title">📷 สแกนสลิป / ใบเสร็จ</span>
+          <button class="scan-btn" id="scan-btn" onclick="triggerScan()">
+            อัปโหลดรูป
+          </button>
+          <input type="file" id="scan-file-input" accept="image/*" style="display:none" onchange="handleScanFile(this.files[0])">
+        </div>
+        <div id="scan-body">
+          <div class="scan-empty-hint">
+            <span class="big">🧾</span>
+            ลากวางรูป หรือกดปุ่มเพื่ออัปโหลดสลิป / ใบเสร็จ<br>
+            <span style="font-size:11px">ระบบจะอ่านข้อมูลและกรอกให้อัตโนมัติ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manual Form -->
       <div class="form-group">
         <label class="form-label">ประเภท</label>
         <select class="form-select" id="txn-type" onchange="updateTxnCats()">
@@ -905,15 +724,24 @@
         <select class="form-select" id="txn-cat"></select>
       </div>
       <div class="form-group">
-        <label class="form-label">รายละเอียด</label>
-        <input type="text" class="form-input" id="txn-note" placeholder="เช่น เงินเดือนเดือนพฤษภาคม">
+        <label class="form-label">
+          รายละเอียด
+          <span class="ocr-badge" id="note-badge" style="display:none">OCR</span>
+        </label>
+        <input type="text" class="form-input" id="txn-note" placeholder="เช่น เงินเดือน, ค่าอาหาร, โอนเงิน">
       </div>
       <div class="form-group">
-        <label class="form-label">จำนวน (บาท)</label>
+        <label class="form-label">
+          จำนวน (บาท)
+          <span class="ocr-badge" id="amount-badge" style="display:none">OCR</span>
+        </label>
         <input type="number" class="form-input" id="txn-amount" placeholder="0" min="0">
       </div>
       <div class="form-group">
-        <label class="form-label">วันที่</label>
+        <label class="form-label">
+          วันที่
+          <span class="ocr-badge" id="date-badge" style="display:none">OCR</span>
+        </label>
         <input type="date" class="form-input" id="txn-date">
       </div>
     </div>
@@ -948,12 +776,67 @@
   </div>
 </div>
 
+<!-- ══ MODAL: Insurance Policy ══ -->
+<div class="modal-overlay" id="modal-insure">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-insure-title">เพิ่มกรมธรรม์</h3>
+      <button class="modal-close" onclick="closeModal('modal-insure')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">ประเภทประกัน</label>
+        <select class="form-select" id="ins-type" onchange="updateInsTaxNote()">
+          <option value="life">🛡️ ประกันชีวิต</option>
+          <option value="health">🏥 ประกันสุขภาพ (ตัวเอง)</option>
+          <option value="health_p">👪 ประกันสุขภาพ (พ่อแม่)</option>
+          <option value="pension">👴 ประกันบำนาญ</option>
+          <option value="accident">🩹 ประกันอุบัติเหตุ (PA)</option>
+          <option value="car">🚗 ประกันรถยนต์</option>
+          <option value="other">📋 ประกันอื่นๆ</option>
+        </select>
+        <div id="ins-tax-note" style="font-size:11px;color:var(--gold);margin-top:5px;font-weight:600"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">บริษัท / ชื่อแผนประกัน</label>
+        <input type="text" class="form-input" id="ins-name" placeholder="เช่น AIA Health+, เมืองไทยชีวิต">
+      </div>
+      <div class="form-group">
+        <label class="form-label">เบี้ยประกันต่อปี (บาท)</label>
+        <input type="number" class="form-input" id="ins-premium" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">ทุนประกัน / วงเงินคุ้มครอง (บาท)</label>
+        <input type="number" class="form-input" id="ins-coverage" placeholder="0" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">หมายเหตุ (ไม่บังคับ)</label>
+        <input type="text" class="form-input" id="ins-note" placeholder="เช่น ต่ออายุทุกปี มี.ค., ประกันกลุ่ม">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-insure')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveInsurePolicy()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ════════════════════════════════════════════
 //  CONSTANTS & DATA
 // ════════════════════════════════════════════
 
 const PALETTE = ['#B8860B','#3D7A52','#4A6FA5','#8A5FA8','#B85450','#C07030','#2E86AB'];
+
+const INS_TYPES = {
+  life:     { label:'ประกันชีวิต',            icon:'🛡️', color:'#4A6FA5', taxMax:100000,  note:'max 100,000 บาท' },
+  health:   { label:'ประกันสุขภาพ (ตัวเอง)',  icon:'🏥', color:'#3D7A52', taxMax:25000,   note:'max 25,000 บาท' },
+  health_p: { label:'ประกันสุขภาพ (พ่อแม่)', icon:'👪', color:'#8A5FA8', taxMax:15000,   note:'max 15,000 บาท' },
+  pension:  { label:'ประกันบำนาญ',            icon:'👴', color:'#B8860B', taxMax:200000,  note:'max 200,000 บาท (นับรวมกองทุนเกษียณ)' },
+  accident: { label:'ประกันอุบัติเหตุ (PA)',  icon:'🩹', color:'#C07030', taxMax:0,       note:'ไม่มีสิทธิ์ลดหย่อน' },
+  car:      { label:'ประกันรถยนต์',           icon:'🚗', color:'#B85450', taxMax:0,       note:'ไม่มีสิทธิ์ลดหย่อน' },
+  other:    { label:'ประกันอื่นๆ',            icon:'📋', color:'#7A6250', taxMax:0,       note:'ขึ้นอยู่กับประเภท' },
+};
 
 const INCOME_CATS  = ['เงินเดือน','Freelance / รายได้เสริม','รายได้จากการลงทุน','โบนัส','ขายของ','อื่นๆ (รายรับ)'];
 const EXPENSE_CATS = ['บ้าน / เช่า','อาหาร','เดินทาง','สุขภาพ / ประกัน','ออม / ลงทุน','ช้อปปิ้ง','บันเทิง','สาธารณูปโภค','การศึกษา','อื่นๆ (รายจ่าย)'];
@@ -969,13 +852,25 @@ const TAX_BRACKETS = [
   { ceil: Infinity, rate: 0.35 },
 ];
 
+const DEFAULT_BUDGETS = {
+  'บ้าน / เช่า': 12000, 'อาหาร': 8000, 'เดินทาง': 3000,
+  'สุขภาพ / ประกัน': 2000, 'ออม / ลงทุน': 10000, 'ช้อปปิ้ง': 3000,
+  'บันเทิง': 2000, 'สาธารณูปโภค': 1500, 'การศึกษา': 0, 'อื่นๆ (รายจ่าย)': 1000,
+};
+
+const CAT_ICONS = {
+  'บ้าน / เช่า':'🏠','อาหาร':'🍜','เดินทาง':'🚗','สุขภาพ / ประกัน':'💊',
+  'ออม / ลงทุน':'📈','ช้อปปิ้ง':'🛍️','บันเทิง':'🎬','สาธารณูปโภค':'💡',
+  'การศึกษา':'📚','อื่นๆ (รายจ่าย)':'📦',
+};
+
 function load(k, d) {
   try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; }
 }
 function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 
-let txns    = load('fp_txns', []);
-let assets  = load('fp_assets', [
+let txns     = load('fp_txns', []);
+let assets   = load('fp_assets', [
   { name: 'หุ้น / SSF',               cost: 0, cur: 0, color: PALETTE[0] },
   { name: 'กองทุนรวม / RMF',           cost: 0, cur: 0, color: PALETTE[1] },
   { name: 'พันธบัตร / ตราสารหนี้',      cost: 0, cur: 0, color: PALETTE[2] },
@@ -983,17 +878,20 @@ let assets  = load('fp_assets', [
   { name: 'ทองคำ',                     cost: 0, cur: 0, color: PALETTE[4] },
   { name: 'อสังหาริมทรัพย์',            cost: 0, cur: 0, color: PALETTE[5] },
 ]);
-let invSet  = load('fp_invset', { goal: 5000000, ret: 7 });
-let txnFilt = 'all';
+let invSet   = load('fp_invset', { goal: 5000000, ret: 7 });
+let budgets  = load('fp_budgets', DEFAULT_BUDGETS);
+let policies = load('fp_policies', []);
+let editInsureId = null;
+let txnFilt  = 'all';
 let tempAssets = [];
 
 // ════════════════════════════════════════════
 //  FORMATTING
 // ════════════════════════════════════════════
 
-function fmt(n)   { return '฿' + Math.round(n).toLocaleString('th-TH'); }
-function fmtN(n)  { return Math.round(n).toLocaleString('th-TH'); }
-function fmtP(n)  { return (n >= 0 ? '+' : '') + n.toFixed(1) + '%'; }
+function fmt(n)  { return '฿' + Math.round(n).toLocaleString('th-TH'); }
+function fmtN(n) { return Math.round(n).toLocaleString('th-TH'); }
+function fmtP(n) { return (n >= 0 ? '+' : '') + n.toFixed(1) + '%'; }
 
 // ════════════════════════════════════════════
 //  NAVIGATION
@@ -1007,7 +905,15 @@ function goTo(id) {
     if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + id + "'"))
       n.classList.add('active');
   });
-  const renders = { dashboard: renderDashboard, cashflow: renderCashflow, invest: renderInvest, tax: renderTax, retire: calcRetire };
+  const renders = {
+    dashboard: renderDashboard,
+    cashflow:  renderCashflow,
+    budget:    renderBudget,
+    invest:    renderInvest,
+    tax:       renderTax,
+    retire:    calcRetire,
+    insure:    renderInsure,
+  };
   renders[id] && renders[id]();
 }
 
@@ -1055,17 +961,16 @@ function renderDashboard() {
 
   document.getElementById('dash-chart').innerHTML = months.map(m => {
     const ts  = txns.filter(t => t.date.startsWith(m.key));
-    const inc = sum(ts, 'income');
-    const exp = sum(ts, 'expense');
+    const i2  = sum(ts, 'income');
+    const e2  = sum(ts, 'expense');
     const h   = 130;
-    return `
-      <div class="chart-col">
-        <div class="chart-bars">
-          <div class="bar income" style="height:${Math.max(inc/maxV*h,0).toFixed(0)}px"></div>
-          <div class="bar expense" style="height:${Math.max(exp/maxV*h,0).toFixed(0)}px"></div>
-        </div>
-        <div class="chart-label">${m.label}</div>
-      </div>`;
+    return `<div class="chart-col">
+      <div class="chart-bars">
+        <div class="bar income" style="height:${Math.max(i2/maxV*h,0).toFixed(0)}px"></div>
+        <div class="bar expense" style="height:${Math.max(e2/maxV*h,0).toFixed(0)}px"></div>
+      </div>
+      <div class="chart-label">${m.label}</div>
+    </div>`;
   }).join('');
 
   // Goals
@@ -1093,7 +998,6 @@ function renderDashboard() {
     </div>
   `;
 
-  // Recent
   const recent = [...txns].sort((a,b) => new Date(b.date)-new Date(a.date)).slice(0, 6);
   document.getElementById('dash-recent').innerHTML = recent.length === 0
     ? '<div class="empty-state"><div class="empty-icon">📋</div><p>ยังไม่มีรายการ — ไปที่ "รายรับ-รายจ่าย" เพื่อเพิ่มรายการแรก</p></div>'
@@ -1115,17 +1019,17 @@ function renderDashboard() {
 // ════════════════════════════════════════════
 
 function renderCashflow() {
-  const sel = document.getElementById('month-filter');
+  const sel  = document.getElementById('month-filter');
   const opts = last12Months(new Date());
   const prev = sel.value;
   sel.innerHTML = opts.map(m => `<option value="${m.key}" ${m.key===prev?'selected':''}>${m.label}</option>`).join('');
   if (!prev) sel.value = opts[0].key;
 
-  const ym   = sel.value;
-  const all  = txns.filter(t => t.date.startsWith(ym));
-  const inc  = sum(all, 'income');
-  const exp  = sum(all, 'expense');
-  const net  = inc - exp;
+  const ym  = sel.value;
+  const all = txns.filter(t => t.date.startsWith(ym));
+  const inc = sum(all, 'income');
+  const exp = sum(all, 'expense');
+  const net = inc - exp;
 
   document.getElementById('cf-income').textContent  = fmt(inc);
   document.getElementById('cf-expense').textContent = fmt(exp);
@@ -1172,10 +1076,10 @@ function saveTxn() {
   if (!amount || amount <= 0 || !date) { alert('กรุณากรอกจำนวนเงินและวันที่'); return; }
 
   txns.push({
-    id:     Date.now().toString(),
-    type:   document.getElementById('txn-type').value,
-    cat:    document.getElementById('txn-cat').value,
-    note:   document.getElementById('txn-note').value.trim(),
+    id:    Date.now().toString(),
+    type:  document.getElementById('txn-type').value,
+    cat:   document.getElementById('txn-cat').value,
+    note:  document.getElementById('txn-note').value.trim(),
     amount, date
   });
   save('fp_txns', txns);
@@ -1193,6 +1097,103 @@ function deleteTxn(id) {
 }
 
 // ════════════════════════════════════════════
+//  BUDGET
+// ════════════════════════════════════════════
+
+function renderBudget() {
+  const sel  = document.getElementById('budget-month');
+  const opts = last12Months(new Date());
+  const prev = sel.value;
+  sel.innerHTML = opts.map(m => `<option value="${m.key}" ${m.key===prev?'selected':''}>${m.label}</option>`).join('');
+  if (!prev) sel.value = opts[0].key;
+
+  const ym      = sel.value;
+  const expTxns = txns.filter(t => t.type === 'expense' && t.date.startsWith(ym));
+
+  // Actuals per category
+  const actuals = {};
+  EXPENSE_CATS.forEach(cat => {
+    actuals[cat] = expTxns.filter(t => t.cat === cat).reduce((s,t) => s + t.amount, 0);
+  });
+
+  const totalBudget  = EXPENSE_CATS.reduce((s,c) => s + (budgets[c] || 0), 0);
+  const totalActual  = EXPENSE_CATS.reduce((s,c) => s + actuals[c], 0);
+  const totalLeft    = Math.max(0, totalBudget - totalActual);
+  const overCount    = EXPENSE_CATS.filter(c => budgets[c] > 0 && actuals[c] > budgets[c]).length;
+
+  document.getElementById('budget-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">งบรวมทั้งเดือน</div>
+      <div class="stat-value font-mono">${fmt(totalBudget)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">จ่ายไปแล้ว</div>
+      <div class="stat-value negative font-mono">${fmt(totalActual)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">งบคงเหลือ</div>
+      <div class="stat-value ${totalLeft>0?'positive':'negative'} font-mono">${fmt(totalLeft)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">หมวดที่เกินงบ</div>
+      <div class="stat-value ${overCount>0?'negative':''} font-mono">${overCount} หมวด</div>
+    </div>
+  `;
+
+  document.getElementById('budget-cats').innerHTML = EXPENSE_CATS.map(cat => {
+    const budget = budgets[cat] || 0;
+    const actual = actuals[cat] || 0;
+    const pct    = budget > 0 ? Math.min(actual / budget * 100, 100) : 0;
+    const over   = budget > 0 && actual > budget;
+    const warn   = budget > 0 && pct >= 80 && !over;
+    const noSet  = budget === 0;
+
+    const barColor  = over ? 'red' : warn ? 'yellow' : 'green';
+    const badgeCls  = over ? 'badge-over' : warn ? 'badge-warn' : noSet ? 'badge-none' : 'badge-ok';
+    const badgeTxt  = over
+      ? `เกิน ${fmt(actual - budget)}`
+      : warn
+        ? `ใช้ ${pct.toFixed(0)}%`
+        : noSet
+          ? 'ยังไม่ตั้งงบ'
+          : `ใช้ ${pct.toFixed(0)}%`;
+
+    return `
+      <div class="budget-cat-card">
+        <div class="budget-cat-header">
+          <div class="budget-cat-name">${CAT_ICONS[cat] || '📂'} ${cat}</div>
+          <span class="budget-badge ${badgeCls}">${badgeTxt}</span>
+        </div>
+        <div class="budget-amounts">
+          <span style="color:var(--text-muted)">จ่ายจริง: <strong style="color:var(--text)">${fmt(actual)}</strong></span>
+          <span style="color:var(--text-muted)">งบ: <strong style="color:var(--brown)">${budget > 0 ? fmt(budget) : '—'}</strong></span>
+        </div>
+        <div class="budget-bar">
+          <div class="budget-bar-fill progress-fill ${barColor}" style="width:${pct}%"></div>
+        </div>
+        <div class="budget-input-row">
+          <label>งบ/เดือน:</label>
+          <input type="number" id="bgt-${encodeURIComponent(cat)}" value="${budget || ''}" placeholder="0 = ไม่ตั้งงบ" min="0">
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function saveBudgets() {
+  EXPENSE_CATS.forEach(cat => {
+    const el = document.getElementById('bgt-' + encodeURIComponent(cat));
+    if (el) budgets[cat] = parseFloat(el.value) || 0;
+  });
+  save('fp_budgets', budgets);
+  renderBudget();
+  // Flash the save button
+  const btn = document.querySelector('[onclick="saveBudgets()"]');
+  const orig = btn.textContent;
+  btn.textContent = '✅ บันทึกแล้ว';
+  setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
+// ════════════════════════════════════════════
 //  INVEST
 // ════════════════════════════════════════════
 
@@ -1205,17 +1206,14 @@ function renderInvest() {
   const gPct   = Math.min(total / goal * 100, 100);
 
   document.getElementById('inv-total').textContent = fmt(total);
-
   const pnlEl = document.getElementById('inv-pnl');
   pnlEl.textContent = fmt(pnl);
   pnlEl.className = `stat-value font-mono ${pnl >= 0 ? 'positive' : 'negative'}`;
   document.getElementById('inv-pnl-pct').textContent = cost > 0 ? fmtP(pnlPct) : '';
-
   document.getElementById('inv-goal-pct').textContent = gPct.toFixed(1) + '%';
   document.getElementById('inv-goal-txt').textContent = `${fmt(total)} / ${fmt(goal)}`;
   document.getElementById('inv-goal-bar').style.width = gPct + '%';
-
-  document.getElementById('inv-goal-input').value  = invSet.goal || '';
+  document.getElementById('inv-goal-input').value   = invSet.goal || '';
   document.getElementById('inv-return-input').value = invSet.ret || 7;
 
   const denom = total > 0 ? total : 1;
@@ -1235,18 +1233,13 @@ function renderInvest() {
 function renderInvProjection(current) {
   const ret  = (parseFloat(document.getElementById('inv-return-input')?.value) || 7) / 100;
   const goal = parseFloat(document.getElementById('inv-goal-input')?.value) || 5000000;
-
   if (ret <= 0 || goal <= current) {
-    document.getElementById('inv-projection').innerHTML =
-      goal <= current
-        ? '<div class="highlight-box green" style="margin-top:12px"><strong>✅ ถึงเป้าหมายแล้ว!</strong></div>'
-        : '';
+    document.getElementById('inv-projection').innerHTML = goal <= current
+      ? '<div class="highlight-box green" style="margin-top:12px"><strong>✅ ถึงเป้าหมายแล้ว!</strong></div>' : '';
     return;
   }
-
   let yrs = 0, val = current;
   while (val < goal && yrs < 100) { val = val * (1 + ret); yrs++; }
-
   document.getElementById('inv-projection').innerHTML = `
     <div class="highlight-box" style="margin-top:12px">
       <div style="font-size:12px;color:var(--brown-light);font-weight:700;margin-bottom:6px">การคาดการณ์ (ไม่รวมออมเพิ่ม)</div>
@@ -1310,18 +1303,17 @@ function renderTax() {
 function renderBrackets() {
   document.getElementById('tax-brackets-display').innerHTML = TAX_BRACKETS.map(b => `
     <div class="tax-row" style="font-size:13px">
-      <span style="color:var(--text-muted)">
-        ${b.ceil === Infinity ? 'มากกว่า 5,000,000' : `0 – ${fmtN(b.ceil)}`} บาท
-      </span>
+      <span style="color:var(--text-muted)">${b.ceil === Infinity ? 'มากกว่า 5,000,000' : `0 – ${fmtN(b.ceil)}`} บาท</span>
       <span style="font-weight:600">${(b.rate*100).toFixed(0)}%</span>
     </div>`).join('');
 }
 
 function calcTax() {
   const income    = +document.getElementById('t-income').value   || 0;
-  const lifeIns   = Math.min(+document.getElementById('t-life').value   || 0, 100000);
-  const healthIns = Math.min(+document.getElementById('t-health').value || 0, 25000);
-  const parentIns = Math.min(+document.getElementById('t-parent').value || 0, 15000);
+  const lifeIns   = Math.min(+document.getElementById('t-life').value    || 0, 100000);
+  const healthIns = Math.min(+document.getElementById('t-health').value  || 0, 25000);
+  const parentIns = Math.min(+document.getElementById('t-parent').value  || 0, 15000);
+  const pensionRaw= +document.getElementById('t-pension').value || 0;
   const ssfRaw    = +document.getElementById('t-ssf').value  || 0;
   const rmfRaw    = +document.getElementById('t-rmf').value  || 0;
   const pvd       = Math.min(+document.getElementById('t-pvd').value || 0, 500000);
@@ -1330,47 +1322,42 @@ function calcTax() {
   const donateRaw = +document.getElementById('t-donate').value || 0;
   const children  = parseInt(document.getElementById('t-child').value) || 0;
 
-  // Deductions
-  const expDeduct   = Math.min(income * 0.5, 100000);
-  const personal    = 60000;
-  const childAllow  = children > 0 ? 30000 + Math.max(0, children-1) * 60000 : 0;
-  const ssfMax      = Math.min(income * 0.3, 200000);
-  const ssf         = Math.min(ssfRaw, ssfMax);
-  const retireRoom  = Math.max(0, 500000 - ssf - pvd);
-  const rmf         = Math.min(rmfRaw, retireRoom);
+  const expDeduct  = Math.min(income * 0.5, 100000);
+  const personal   = 60000;
+  const childAllow = children > 0 ? 30000 + Math.max(0, children-1) * 60000 : 0;
+  // ประกันบำนาญ: max 15% รายได้, ไม่เกิน 200,000 (นับใน pool 500K)
+  const pensionMax = Math.min(income * 0.15, 200000);
+  const pension    = Math.min(pensionRaw, pensionMax);
+  const ssfMax     = Math.min(income * 0.3, 200000);
+  const ssf        = Math.min(ssfRaw, ssfMax);
+  // pool 500K รวม pension + ssf + pvd + rmf
+  const retireRoom = Math.max(0, 500000 - pension - ssf - pvd);
+  const rmf        = Math.min(rmfRaw, retireRoom);
 
-  let net = income - expDeduct - personal - childAllow - social - lifeIns - healthIns - parentIns - ssf - rmf - pvd - mortgage;
+  let net = income - expDeduct - personal - childAllow - social - lifeIns - healthIns - parentIns - pension - ssf - rmf - pvd - mortgage;
   const donateMax = Math.max(0, net * 0.10);
   const donate    = Math.min(donateRaw, donateMax);
   net = Math.max(0, net - donate);
 
-  const tax        = taxFromNet(net);
-  const margRate   = getMarginal(net);
-  const effRate    = income > 0 ? tax / income * 100 : 0;
-
-  // Baseline (no optional deductions)
-  const baseNet = Math.max(0, income - expDeduct - personal - social);
-  const baseTax = taxFromNet(baseNet);
-  const saved   = baseTax - tax;
-
-  // Totals of deductions used
-  const totalDeduct = expDeduct + personal + childAllow + social + lifeIns + healthIns + parentIns + ssf + rmf + pvd + mortgage + donate;
+  const tax      = taxFromNet(net);
+  const margRate = getMarginal(net);
+  const effRate  = income > 0 ? tax / income * 100 : 0;
+  const baseNet  = Math.max(0, income - expDeduct - personal - social);
+  const baseTax  = taxFromNet(baseNet);
+  const saved    = baseTax - tax;
+  const totalDeduct = expDeduct + personal + childAllow + social + lifeIns + healthIns + parentIns + pension + ssf + rmf + pvd + mortgage + donate;
 
   document.getElementById('tax-result').innerHTML = `
     <div class="tax-row" style="color:var(--text-muted);font-size:13px">
       <span>รายได้รวม</span><span class="font-mono">${fmt(income)}</span>
     </div>
     <div class="tax-row" style="color:var(--text-muted);font-size:13px">
-      <span>หักค่าใช้จ่าย (50%, max 100K)</span>
-      <span class="font-mono">−${fmt(expDeduct)}</span>
+      <span>หักค่าใช้จ่าย (50%, max 100K)</span><span class="font-mono">−${fmt(expDeduct)}</span>
     </div>
     <div class="tax-row" style="color:var(--text-muted);font-size:13px">
-      <span>ลดหย่อนส่วนตัว + ทั้งหมด</span>
-      <span class="font-mono">−${fmt(totalDeduct - expDeduct)}</span>
+      <span>ลดหย่อนส่วนตัว + ทั้งหมด</span><span class="font-mono">−${fmt(totalDeduct - expDeduct)}</span>
     </div>
-    <div class="tax-row font-bold">
-      <span>เงินได้สุทธิ</span><span class="font-mono">${fmt(net)}</span>
-    </div>
+    <div class="tax-row font-bold"><span>เงินได้สุทธิ</span><span class="font-mono">${fmt(net)}</span></div>
     <div class="divider"></div>
     <div class="tax-row" style="font-size:22px;font-weight:800;color:var(--red)">
       <span>ภาษีที่ต้องจ่าย</span><span class="font-mono">${fmt(tax)}</span>
@@ -1379,36 +1366,29 @@ function calcTax() {
       <span>อัตราภาษีที่แท้จริง</span><span>${effRate.toFixed(2)}%</span>
     </div>
     <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
-      <span>Marginal rate (ขั้นบันไดสูงสุด)</span><span>${(margRate*100).toFixed(0)}%</span>
+      <span>Marginal rate</span><span>${(margRate*100).toFixed(0)}%</span>
     </div>
-    ${saved > 0 ? `
-    <div class="divider"></div>
+    ${saved > 0 ? `<div class="divider"></div>
     <div class="tax-row" style="color:var(--green);font-weight:700;font-size:15px">
-      <span>ประหยัดภาษีจากลดหย่อน</span>
-      <span class="font-mono">−${fmt(saved)}</span>
+      <span>ประหยัดภาษีจากลดหย่อน</span><span class="font-mono">−${fmt(saved)}</span>
     </div>` : ''}
   `;
 
-  // Tips
   const tips = [];
-  const ssfRoom  = Math.max(0, ssfMax - ssf);
-  const rmfRoom  = Math.max(0, 500000 - ssf - rmf - pvd);
-  const lifeRoom = Math.max(0, 100000 - lifeIns);
-  const hRoom    = Math.max(0, 25000 - healthIns);
-  const pRoom    = Math.max(0, 15000 - parentIns);
+  const ssfRoom     = Math.max(0, ssfMax - ssf);
+  const rmfRoom     = Math.max(0, 500000 - pension - ssf - rmf - pvd);
+  const lifeRoom    = Math.max(0, 100000 - lifeIns);
+  const hRoom       = Math.max(0, 25000 - healthIns);
+  const pRoom       = Math.max(0, 15000 - parentIns);
+  const pensionRoom = Math.max(0, pensionMax - pension);
 
-  if (ssfRoom > 0 && margRate >= 0.1)
-    tips.push(`เพิ่ม SSF ได้อีก ${fmt(ssfRoom)} → ประหยัดภาษีประมาณ ${fmt(ssfRoom * margRate)}`);
-  if (rmfRoom > 0 && margRate >= 0.1)
-    tips.push(`เพิ่ม RMF ได้อีก ${fmt(rmfRoom)} → ประหยัดภาษีประมาณ ${fmt(rmfRoom * margRate)}`);
-  if (lifeRoom > 0 && margRate >= 0.05)
-    tips.push(`ประกันชีวิตลดหย่อนได้อีก ${fmt(lifeRoom)} (ประหยัด ${fmt(lifeRoom * margRate)})`);
-  if (hRoom > 0)
-    tips.push(`ประกันสุขภาพตัวเองลดหย่อนได้อีก ${fmt(hRoom)}`);
-  if (pRoom > 0)
-    tips.push(`ประกันสุขภาพพ่อแม่ลดหย่อนได้อีก ${fmt(pRoom)} (ถ้ามีผู้ปกครองที่ดูแล)`);
-  if (tips.length === 0)
-    tips.push('คุณใช้สิทธิ์ลดหย่อนได้เต็มที่หรือใกล้เคียงแล้ว');
+  if (pensionRoom > 0 && margRate >= 0.1) tips.push(`ประกันบำนาญลดหย่อนได้อีก ${fmt(pensionRoom)} → ประหยัดภาษี ~${fmt(pensionRoom * margRate)} (นับรวมกองทุนเกษียณ)`);
+  if (ssfRoom > 0 && margRate >= 0.1)     tips.push(`เพิ่ม SSF ได้อีก ${fmt(ssfRoom)} → ประหยัดภาษี ~${fmt(ssfRoom * margRate)}`);
+  if (rmfRoom > 0 && margRate >= 0.1)     tips.push(`เพิ่ม RMF ได้อีก ${fmt(rmfRoom)} → ประหยัดภาษี ~${fmt(rmfRoom * margRate)}`);
+  if (lifeRoom > 0 && margRate >= 0.05)   tips.push(`ประกันชีวิตลดหย่อนได้อีก ${fmt(lifeRoom)} (ประหยัด ~${fmt(lifeRoom * margRate)})`);
+  if (hRoom > 0) tips.push(`ประกันสุขภาพตัวเองลดหย่อนได้อีก ${fmt(hRoom)}`);
+  if (pRoom > 0) tips.push(`ประกันสุขภาพพ่อแม่ลดหย่อนได้อีก ${fmt(pRoom)}`);
+  if (tips.length === 0) tips.push('ใช้สิทธิ์ลดหย่อนได้เต็มที่แล้ว 🎉');
 
   document.getElementById('tax-tips').innerHTML =
     tips.map(t => `<div class="tip-item"><span>💡</span><span>${t}</span></div>`).join('');
@@ -1435,62 +1415,46 @@ function getMarginal(net) {
 // ════════════════════════════════════════════
 
 function fireNumber() {
-  const spend    = parseFloat(document.getElementById('r-spend')?.value   || 50000);
-  const age      = parseFloat(document.getElementById('r-age')?.value     || 32);
-  const retAge   = parseFloat(document.getElementById('r-ret-age')?.value || 55);
-  const inf      = (parseFloat(document.getElementById('r-inf')?.value    || 3)) / 100;
-  const yrs      = Math.max(0, retAge - age);
-  const futSpend = spend * Math.pow(1 + inf, yrs) * 12;
-  return futSpend / 0.04;
+  const spend  = parseFloat(document.getElementById('r-spend')?.value   || 50000);
+  const age    = parseFloat(document.getElementById('r-age')?.value     || 32);
+  const retAge = parseFloat(document.getElementById('r-ret-age')?.value || 55);
+  const inf    = (parseFloat(document.getElementById('r-inf')?.value    || 3)) / 100;
+  const yrs    = Math.max(0, retAge - age);
+  return spend * Math.pow(1 + inf, yrs) * 12 / 0.04;
 }
 
 function calcRetire() {
-  const age      = parseFloat(document.getElementById('r-age').value)     || 32;
-  const retAge   = parseFloat(document.getElementById('r-ret-age').value) || 55;
-  const spend    = parseFloat(document.getElementById('r-spend').value)   || 50000;
-  const current  = parseFloat(document.getElementById('r-current').value) || 0;
-  const monthly  = parseFloat(document.getElementById('r-monthly').value) || 10000;
-  const retPct   = (parseFloat(document.getElementById('r-return').value) || 7) / 100;
-  const infPct   = (parseFloat(document.getElementById('r-inf').value)    || 3) / 100;
-  const lifeAge  = parseFloat(document.getElementById('r-life').value)    || 85;
+  const age     = parseFloat(document.getElementById('r-age').value)     || 32;
+  const retAge  = parseFloat(document.getElementById('r-ret-age').value) || 55;
+  const spend   = parseFloat(document.getElementById('r-spend').value)   || 50000;
+  const current = parseFloat(document.getElementById('r-current').value) || 0;
+  const monthly = parseFloat(document.getElementById('r-monthly').value) || 10000;
+  const retPct  = (parseFloat(document.getElementById('r-return').value) || 7) / 100;
+  const infPct  = (parseFloat(document.getElementById('r-inf').value)    || 3) / 100;
+  const lifeAge = parseFloat(document.getElementById('r-life').value)    || 85;
 
-  const yToRet  = Math.max(0, retAge - age);
-  const retYrs  = Math.max(0, lifeAge - retAge);
-
-  // Future value at retirement
+  const yToRet = Math.max(0, retAge - age);
+  const retYrs = Math.max(0, lifeAge - retAge);
   const fvNow  = current * Math.pow(1 + retPct, yToRet);
-  const fvSave = yToRet > 0
-    ? monthly * 12 * ((Math.pow(1 + retPct, yToRet) - 1) / retPct)
-    : 0;
-  const projected = fvNow + fvSave;
-
-  // Needed at retirement (PV of inflation-adjusted annuity)
-  const annSpend    = spend * 12 * Math.pow(1 + infPct, yToRet);
-  const realRet     = (1 + retPct) / (1 + infPct) - 1;
-  const needed      = Math.abs(realRet) < 0.0001
-    ? annSpend * retYrs
-    : annSpend * (1 - Math.pow(1 + realRet, -retYrs)) / realRet;
-
-  const gap    = needed - projected;
-  const onTrk  = projected >= needed;
-
-  const reqMonthly = gap > 0 && yToRet > 0
-    ? gap / (((Math.pow(1 + retPct, yToRet) - 1) / retPct) * 12)
-    : 0;
-
-  const fire = annSpend / 0.04;
+  const fvSave = yToRet > 0 ? monthly * 12 * ((Math.pow(1 + retPct, yToRet) - 1) / retPct) : 0;
+  const projected  = fvNow + fvSave;
+  const annSpend   = spend * 12 * Math.pow(1 + infPct, yToRet);
+  const realRet    = (1 + retPct) / (1 + infPct) - 1;
+  const needed     = Math.abs(realRet) < 0.0001 ? annSpend * retYrs : annSpend * (1 - Math.pow(1 + realRet, -retYrs)) / realRet;
+  const gap        = needed - projected;
+  const onTrk     = projected >= needed;
+  const reqMonthly = gap > 0 && yToRet > 0 ? gap / (((Math.pow(1 + retPct, yToRet) - 1) / retPct) * 12) : 0;
+  const fire       = annSpend / 0.04;
 
   document.getElementById('retire-result').innerHTML = `
     <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
       <span>ปีที่เหลือก่อนเกษียณ</span><span style="font-weight:700;color:var(--brown)">${yToRet} ปี</span>
     </div>
     <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
-      <span>ค่าใช้จ่ายต่อปีตอนเกษียณ (รวมเงินเฟ้อ)</span>
-      <span class="font-mono">${fmt(annSpend)}</span>
+      <span>ค่าใช้จ่าย/ปีตอนเกษียณ (รวมเงินเฟ้อ)</span><span class="font-mono">${fmt(annSpend)}</span>
     </div>
     <div class="tax-row" style="font-size:13px;color:var(--text-muted)">
-      <span>เงินที่ต้องมีตอนเกษียณ</span>
-      <span class="font-mono font-bold">${fmt(needed)}</span>
+      <span>เงินที่ต้องมีตอนเกษียณ</span><span class="font-mono font-bold">${fmt(needed)}</span>
     </div>
     <div class="tax-row" style="font-size:13px">
       <span>คาดการณ์เงินตอนเกษียณ</span>
@@ -1502,7 +1466,7 @@ function calcRetire() {
         ? `<div style="font-weight:700;color:var(--green);font-size:15px">✅ On Track!</div>
            <div style="font-size:13px;margin-top:4px">แผนปัจจุบันเพียงพอสำหรับเกษียณตามเป้าหมาย</div>`
         : `<div style="font-weight:700;color:var(--red);font-size:15px">⚠️ ขาดอยู่ ${fmt(gap)}</div>
-           <div style="font-size:13px;margin-top:4px">ต้องออมเพิ่มเดือนละ <strong>${fmt(reqMonthly)}</strong> เพื่อให้ถึงเป้า</div>`}
+           <div style="font-size:13px;margin-top:4px">ต้องออมเพิ่มเดือนละ <strong>${fmt(reqMonthly)}</strong></div>`}
     </div>
     <div class="progress-bar" style="margin-top:12px;height:9px">
       <div class="progress-fill ${onTrk?'green':''}" style="width:${Math.min(projected/needed*100,100).toFixed(1)}%"></div>
@@ -1512,24 +1476,20 @@ function calcRetire() {
 
   document.getElementById('retire-fire').innerHTML = `
     <div style="margin-bottom:10px">
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">4% Safe Withdrawal Rule — เงินที่ต้องมีเพื่อให้ถอนใช้ได้ตลอดชีวิต</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">4% Safe Withdrawal Rule</div>
       <div style="font-size:30px;font-weight:800;color:var(--gold)">${fmt(fire)}</div>
       <div style="font-size:12px;color:var(--text-muted);margin-top:2px">= ${fmt(annSpend/12)}/เดือน × 12 ÷ 4%</div>
     </div>
     <div style="font-size:13px;color:var(--text-muted);border-top:1px solid var(--border);padding-top:10px">
-      หากลงทุนได้ผลตอบแทนเฉลี่ย ~7%/ปี เงิน ${fmt(fire)} จะสร้างกระแสเงินได้ที่ถอนออกมาได้โดยไม่หมดตลอดชีวิต
+      หากลงทุนได้ผลตอบแทน ~7%/ปี เงิน ${fmt(fire)} จะสร้างกระแสเงินได้ตลอดชีวิตโดยไม่หมดต้นทุน
     </div>
   `;
 
-  // Milestones
   const milestones = [0.25, 0.5, 0.75, 1.0].map(pct => {
     const target = needed * pct;
     if (current >= target) return { pct, target, year: 0, reached: true };
     let val = current, yr = 0;
-    while (val < target && yr < 100) {
-      val = val * (1 + retPct) + monthly * 12;
-      yr++;
-    }
+    while (val < target && yr < 100) { val = val * (1 + retPct) + monthly * 12; yr++; }
     return { pct, target, year: yr, reached: false };
   });
 
@@ -1549,6 +1509,392 @@ function calcRetire() {
 }
 
 // ════════════════════════════════════════════
+//  INSURANCE
+// ════════════════════════════════════════════
+
+function renderInsure() {
+  const totalPremium  = policies.reduce((s,p) => s + (p.premium  || 0), 0);
+  const totalCoverage = policies.reduce((s,p) => s + (p.coverage || 0), 0);
+
+  // เบี้ยรวมแต่ละประเภท
+  const byType = {};
+  policies.forEach(p => { byType[p.type] = (byType[p.type] || 0) + (p.premium || 0); });
+
+  const lifeTax    = Math.min(byType.life    || 0, 100000);
+  const healthTax  = Math.min(byType.health  || 0, 25000);
+  const healthPTax = Math.min(byType.health_p|| 0, 15000);
+  const pensionTax = Math.min(byType.pension || 0, 200000);
+  const totalTax   = lifeTax + healthTax + healthPTax + pensionTax;
+
+  // ─── Stat cards ───
+  document.getElementById('insure-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">เบี้ยรวมต่อปี</div>
+      <div class="stat-value font-mono">${fmt(totalPremium)}</div>
+      <div class="stat-sub">${fmt(totalPremium/12)}/เดือน</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">กรมธรรม์ทั้งหมด</div>
+      <div class="stat-value font-mono">${policies.length}</div>
+      <div class="stat-sub">ฉบับ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ทุนประกันรวม</div>
+      <div class="stat-value gold font-mono">${fmt(totalCoverage)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ลดหย่อนภาษีได้รวม</div>
+      <div class="stat-value positive font-mono">${fmt(totalTax)}</div>
+    </div>
+  `;
+
+  // ─── Policy list ───
+  if (policies.length === 0) {
+    document.getElementById('insure-list').innerHTML =
+      '<div class="empty-state"><div class="empty-icon">🛡️</div><p>ยังไม่มีกรมธรรม์ — กดปุ่ม "+ เพิ่มกรมธรรม์" ด้านบน</p></div>';
+  } else {
+    document.getElementById('insure-list').innerHTML = `
+      <table class="table">
+        <thead><tr>
+          <th>ประเภท</th><th>บริษัท / แผน</th>
+          <th class="text-right">เบี้ย/ปี</th>
+          <th class="text-right">ทุนประกัน</th>
+          <th></th>
+        </tr></thead>
+        <tbody>${policies.map(p => {
+          const t = INS_TYPES[p.type] || INS_TYPES.other;
+          return `<tr>
+            <td style="white-space:nowrap">
+              <span style="font-size:15px">${t.icon}</span>
+              <span style="font-size:12px;margin-left:4px;color:var(--text-muted)">${t.label}</span>
+            </td>
+            <td style="font-size:13px;font-weight:600">${p.name || '—'}${p.note ? `<br><span style="font-size:11px;color:var(--text-muted);font-weight:400">${p.note}</span>` : ''}</td>
+            <td class="text-right font-mono" style="font-weight:700">${fmt(p.premium)}</td>
+            <td class="text-right font-mono" style="color:var(--text-muted)">${p.coverage > 0 ? fmt(p.coverage) : '—'}</td>
+            <td style="white-space:nowrap">
+              <button class="btn btn-ghost btn-sm" onclick="openEditInsure('${p.id}')">แก้ไข</button>
+              <button class="btn btn-danger" onclick="deleteInsurePolicy('${p.id}')">ลบ</button>
+            </td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:13px">
+        <span style="color:var(--text-muted)">เบี้ยรวม</span>
+        <span class="font-mono font-bold">${fmt(totalPremium)}/ปี</span>
+      </div>`;
+  }
+
+  // ─── Tax summary ───
+  const taxRows = [
+    { label:'ประกันชีวิต',            actual: byType.life    ||0, max:100000, deduct: lifeTax    },
+    { label:'ประกันสุขภาพ (ตัวเอง)',  actual: byType.health  ||0, max:25000,  deduct: healthTax  },
+    { label:'ประกันสุขภาพ (พ่อแม่)', actual: byType.health_p||0, max:15000,  deduct: healthPTax },
+    { label:'ประกันบำนาญ',            actual: byType.pension ||0, max:200000, deduct: pensionTax },
+  ];
+  document.getElementById('insure-tax-summary').innerHTML = `
+    ${taxRows.map(r => {
+      const used = r.actual > 0;
+      const pct  = r.max > 0 ? Math.min(r.actual/r.max*100, 100) : 0;
+      const over = r.actual > r.max;
+      return `
+        <div style="margin-bottom:12px">
+          <div class="flex-between" style="margin-bottom:3px">
+            <span style="font-size:13px;color:var(--text-muted)">${r.label}</span>
+            <span class="font-mono" style="font-size:13px;font-weight:700;color:${used?'var(--green)':'var(--text-muted)'}">
+              ${fmt(r.deduct)} <span style="font-weight:400;color:var(--text-muted)">/ ${fmtN(r.max)}</span>
+            </span>
+          </div>
+          <div class="budget-bar"><div class="budget-bar-fill progress-fill ${over?'red':pct>=80?'yellow':'green'}" style="width:${pct}%"></div></div>
+        </div>`;
+    }).join('')}
+    <div class="divider"></div>
+    <div class="flex-between">
+      <span style="font-weight:700">ลดหย่อนได้รวม</span>
+      <span class="font-mono font-bold" style="color:var(--green);font-size:18px">${fmt(totalTax)}</span>
+    </div>
+    ${pensionTax > 0 ? '<div style="font-size:11px;color:var(--text-muted);margin-top:6px">* ประกันบำนาญนับรวมกับ SSF+RMF+PVD ≤ 500,000 บาท</div>' : ''}
+  `;
+
+  // ─── Coverage guide ───
+  const lifeCoverage = policies.filter(p=>p.type==='life').reduce((s,p)=>s+(p.coverage||0),0);
+  const hasHealth    = policies.some(p=>p.type==='health');
+  const hasPension   = policies.some(p=>p.type==='pension');
+  const hasAccident  = policies.some(p=>p.type==='accident');
+
+  document.getElementById('insure-guide').innerHTML = `
+    <div class="tip-item" style="${lifeCoverage>0?'':'background:var(--red-pale);border-color:#E8A09D'}">
+      <span>🛡️</span>
+      <div>
+        <strong>ประกันชีวิต:</strong> ทุนประกันควร 5–10 เท่าของรายได้ต่อปี
+        ${lifeCoverage > 0 ? `<br><span style="font-size:12px;color:var(--green)">✅ ทุนที่มี: ${fmt(lifeCoverage)} บาท</span>` : '<br><span style="font-size:12px;color:var(--red)">⚠️ ยังไม่มีประกันชีวิต</span>'}
+      </div>
+    </div>
+    <div class="tip-item" style="${hasHealth?'':'background:var(--red-pale);border-color:#E8A09D'}">
+      <span>🏥</span>
+      <div>
+        <strong>ประกันสุขภาพ:</strong> วงเงินผู้ป่วยใน ≥ 3 ล้านบาท + ผู้ป่วยนอก
+        ${hasHealth ? '<br><span style="font-size:12px;color:var(--green)">✅ มีประกันสุขภาพแล้ว</span>' : '<br><span style="font-size:12px;color:var(--red)">⚠️ ยังไม่มีประกันสุขภาพ</span>'}
+      </div>
+    </div>
+    <div class="tip-item" style="${hasPension?'':''}">
+      <span>👴</span>
+      <div>
+        <strong>ประกันบำนาญ:</strong> ลดหย่อนภาษีได้สูงสุด 200,000 บาท + สร้างรายได้หลังเกษียณ
+        ${hasPension ? `<br><span style="font-size:12px;color:var(--green)">✅ ใช้สิทธิ์แล้ว ${fmt(pensionTax)} บาท</span>` : '<br><span style="font-size:12px;color:var(--text-muted)">พิจารณาเพิ่มเพื่อลดหย่อนภาษี</span>'}
+      </div>
+    </div>
+    <div class="tip-item">
+      <span>🩹</span>
+      <div>
+        <strong>ประกันอุบัติเหตุ (PA):</strong> เบี้ยถูก คุ้มครองกรณีอุบัติเหตุ
+        ${hasAccident ? '<br><span style="font-size:12px;color:var(--green)">✅ มีแล้ว</span>' : '<br><span style="font-size:12px;color:var(--text-muted)">แนะนำให้มีเสริม เบี้ยเริ่มต้น ~1,000–3,000 บาท/ปี</span>'}
+      </div>
+    </div>
+  `;
+}
+
+function openAddInsure() {
+  editInsureId = null;
+  document.getElementById('ins-type').value    = 'life';
+  document.getElementById('ins-name').value    = '';
+  document.getElementById('ins-premium').value = '';
+  document.getElementById('ins-coverage').value= '';
+  document.getElementById('ins-note').value    = '';
+  document.getElementById('modal-insure-title').textContent = 'เพิ่มกรมธรรม์';
+  updateInsTaxNote();
+  openModal('modal-insure');
+}
+
+function openEditInsure(id) {
+  const p = policies.find(x => x.id === id);
+  if (!p) return;
+  editInsureId = id;
+  document.getElementById('ins-type').value     = p.type;
+  document.getElementById('ins-name').value     = p.name    || '';
+  document.getElementById('ins-premium').value  = p.premium || '';
+  document.getElementById('ins-coverage').value = p.coverage|| '';
+  document.getElementById('ins-note').value     = p.note    || '';
+  document.getElementById('modal-insure-title').textContent = 'แก้ไขกรมธรรม์';
+  updateInsTaxNote();
+  openModal('modal-insure');
+}
+
+function updateInsTaxNote() {
+  const type = document.getElementById('ins-type').value;
+  const t    = INS_TYPES[type] || INS_TYPES.other;
+  const el   = document.getElementById('ins-tax-note');
+  if (!el) return;
+  el.textContent = t.taxMax > 0
+    ? `💡 ลดหย่อนภาษีได้: ${t.note}`
+    : `ℹ️ ${t.note}`;
+  el.style.color = t.taxMax > 0 ? 'var(--gold)' : 'var(--text-muted)';
+}
+
+function saveInsurePolicy() {
+  const name    = document.getElementById('ins-name').value.trim();
+  const premium = parseFloat(document.getElementById('ins-premium').value) || 0;
+  if (!name) { alert('กรุณากรอกชื่อบริษัท / แผนประกัน'); return; }
+  if (premium <= 0) { alert('กรุณากรอกเบี้ยประกันต่อปี'); return; }
+
+  const entry = {
+    id:       editInsureId || Date.now().toString(),
+    type:     document.getElementById('ins-type').value,
+    name,
+    premium,
+    coverage: parseFloat(document.getElementById('ins-coverage').value) || 0,
+    note:     document.getElementById('ins-note').value.trim(),
+  };
+
+  if (editInsureId) {
+    const idx = policies.findIndex(x => x.id === editInsureId);
+    if (idx >= 0) policies[idx] = entry;
+  } else {
+    policies.push(entry);
+  }
+  save('fp_policies', policies);
+  closeModal('modal-insure');
+  renderInsure();
+}
+
+function deleteInsurePolicy(id) {
+  if (!confirm('ยืนยันลบกรมธรรม์นี้?')) return;
+  policies = policies.filter(x => x.id !== id);
+  save('fp_policies', policies);
+  renderInsure();
+}
+
+// ════════════════════════════════════════════
+//  SCAN / OCR
+// ════════════════════════════════════════════
+
+function triggerScan() {
+  document.getElementById('scan-file-input').click();
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('scan-section').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) handleScanFile(file);
+}
+
+function handleScanFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    showScanPreview(dataUrl);
+    runOCR(file);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showScanPreview(dataUrl) {
+  document.getElementById('scan-body').innerHTML = `
+    <div class="scan-preview-wrap">
+      <img src="${dataUrl}" class="scan-preview" alt="สลิป">
+      <div class="ocr-status-bar" id="ocr-status">⏳ กำลังโหลด OCR engine ครั้งแรกอาจใช้เวลา 10–30 วินาที...</div>
+    </div>
+  `;
+  document.getElementById('scan-btn').disabled = true;
+  document.getElementById('scan-btn').textContent = '⏳ กำลังอ่าน...';
+}
+
+function setOCRStatus(msg) {
+  const el = document.getElementById('ocr-status');
+  if (el) el.textContent = msg;
+}
+
+async function loadTesseractLib() {
+  if (window.Tesseract) return;
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://unpkg.com/tesseract.js@4/dist/tesseract.min.js';
+    s.onload = resolve;
+    s.onerror = () => reject(new Error('โหลด OCR library ไม่ได้ — กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต'));
+    document.head.appendChild(s);
+  });
+}
+
+async function runOCR(imageFile) {
+  try {
+    await loadTesseractLib();
+    setOCRStatus('🔍 กำลังอ่านตัวอักษรจากรูป...');
+
+    const { data: { text } } = await Tesseract.recognize(imageFile, 'tha+eng', {
+      logger: m => {
+        if (m.status === 'recognizing text' && m.progress) {
+          setOCRStatus(`🔍 กำลังอ่าน... ${Math.round(m.progress * 100)}%`);
+        }
+      }
+    });
+
+    const result = parseSlipText(text);
+    fillFromOCR(result);
+
+    const found = [result.amount && 'จำนวนเงิน', result.date && 'วันที่'].filter(Boolean);
+    setOCRStatus(found.length > 0
+      ? `✅ อ่านข้อมูลสำเร็จ — พบ: ${found.join(', ')} กรุณาตรวจสอบก่อนบันทึก`
+      : '⚠️ อ่านข้อมูลได้บางส่วน กรุณากรอกข้อมูลที่หายไปเพิ่มเติม'
+    );
+
+  } catch (err) {
+    setOCRStatus('❌ ' + (err.message || 'ไม่สามารถอ่านข้อมูลได้ กรุณากรอกเอง'));
+  } finally {
+    const btn = document.getElementById('scan-btn');
+    if (btn) { btn.disabled = false; btn.textContent = 'เปลี่ยนรูป'; }
+  }
+}
+
+function parseSlipText(rawText) {
+  const text = rawText.replace(/\s+/g, ' ');
+  const result = { amount: null, date: null, note: '' };
+
+  // ── Amount detection ──
+  // Priority 1: keyword before amount
+  const kwPatterns = [
+    /(?:จำนวน(?:เงิน)?|ยอด(?:โอน|รวม|เงิน|สุทธิ)?|รวม(?:ทั้งสิ้น)?|total|amount)[^\d]{0,10}([\d,]+\.?\d*)/i,
+    /([\d,]+\.\d{2})\s*(?:บาท|thb|฿)/i,
+    /฿\s*([\d,]+\.?\d*)/,
+  ];
+
+  for (const pat of kwPatterns) {
+    const m = text.match(pat);
+    if (m) {
+      const num = parseFloat(m[1].replace(/,/g, ''));
+      if (num > 0 && num < 50000000) { result.amount = num; break; }
+    }
+  }
+
+  // Priority 2: largest decimal number on the slip
+  if (!result.amount) {
+    const decimals = [...text.matchAll(/([\d,]+\.\d{2})/g)]
+      .map(m => parseFloat(m[1].replace(/,/g, '')))
+      .filter(n => n > 0 && n < 50000000);
+    if (decimals.length) result.amount = Math.max(...decimals);
+  }
+
+  // Priority 3: large integer (e.g. PromptPay transfer)
+  if (!result.amount) {
+    const ints = [...text.matchAll(/\b([\d,]{5,})\b/g)]
+      .map(m => parseFloat(m[1].replace(/,/g, '')))
+      .filter(n => n >= 100 && n < 50000000);
+    if (ints.length) result.amount = Math.max(...ints);
+  }
+
+  // ── Date detection ──
+  // DD/MM/YYYY or DD-MM-YYYY
+  const datePatterns = [
+    /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/,
+    /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})(?!\d)/,
+  ];
+
+  for (const pat of datePatterns) {
+    const m = text.match(pat);
+    if (m) {
+      let d = m[1], mo = m[2], y = parseInt(m[3]);
+      if (y < 100) y += 2000;
+      if (y > 2500) y -= 543;  // Buddhist year → Gregorian
+      if (y >= 2020 && y <= 2035) {
+        result.date = `${y}-${mo.padStart(2,'0')}-${d.padStart(2,'0')}`;
+        break;
+      }
+    }
+  }
+
+  // ── Note: first meaningful line ──
+  const lines = rawText.split('\n')
+    .map(l => l.trim())
+    .filter(l => l.length > 3 && !/^\d+$/.test(l));
+  result.note = lines[0] || '';
+
+  return result;
+}
+
+function fillFromOCR(result) {
+  if (result.amount) {
+    document.getElementById('txn-amount').value = result.amount;
+    document.getElementById('amount-badge').style.display = 'inline';
+  }
+  if (result.date) {
+    document.getElementById('txn-date').value = result.date;
+    document.getElementById('date-badge').style.display = 'inline';
+  }
+  if (result.note) {
+    document.getElementById('txn-note').value = result.note.substring(0, 60);
+    document.getElementById('note-badge').style.display = 'inline';
+  }
+  // Auto-detect: if note contains transfer keywords → expense; income keywords → income
+  const noteL = result.note.toLowerCase();
+  if (/โอน|จ่าย|ชำระ|ซื้อ|transfer|payment/i.test(noteL)) {
+    document.getElementById('txn-type').value = 'expense';
+  } else if (/รับ|เงินเดือน|salary|income/i.test(noteL)) {
+    document.getElementById('txn-type').value = 'income';
+  }
+  updateTxnCats();
+}
+
+// ════════════════════════════════════════════
 //  MODAL
 // ════════════════════════════════════════════
 
@@ -1557,8 +1903,26 @@ function openModal(id) {
   if (id === 'modal-txn') {
     document.getElementById('txn-date').value = new Date().toISOString().split('T')[0];
     updateTxnCats();
+    resetScanZone();
+    // Hide OCR badges
+    ['amount-badge','date-badge','note-badge'].forEach(b => {
+      document.getElementById(b).style.display = 'none';
+    });
   }
   if (id === 'modal-asset') openAssetModal();
+}
+
+function resetScanZone() {
+  document.getElementById('scan-body').innerHTML = `
+    <div class="scan-empty-hint">
+      <span class="big">🧾</span>
+      ลากวางรูป หรือกดปุ่มเพื่ออัปโหลดสลิป / ใบเสร็จ<br>
+      <span style="font-size:11px">ระบบจะอ่านข้อมูลและกรอกให้อัตโนมัติ</span>
+    </div>
+  `;
+  const btn = document.getElementById('scan-btn');
+  if (btn) { btn.disabled = false; btn.textContent = 'อัปโหลดรูป'; }
+  document.getElementById('scan-file-input').value = '';
 }
 
 function closeModal(id) {
@@ -1576,18 +1940,15 @@ document.querySelectorAll('.modal-overlay').forEach(el => {
 function monthKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
 }
-
 function sum(arr, type) {
   return arr.filter(t => t.type === type).reduce((s,t) => s + t.amount, 0);
 }
-
 function last6Months(now) {
   return Array.from({length:6}, (_,i) => {
     const d = new Date(now.getFullYear(), now.getMonth()-5+i, 1);
     return { key: monthKey(d), label: d.toLocaleDateString('th-TH',{month:'short'}) };
   });
 }
-
 function last12Months(now) {
   return Array.from({length:12}, (_,i) => {
     const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
