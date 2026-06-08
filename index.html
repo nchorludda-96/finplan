@@ -295,6 +295,43 @@
   }
   .scan-empty-hint .big { font-size: 28px; display: block; margin-bottom: 4px; }
 
+  /* ══════════════════════════════════
+     DEBT PAGE
+  ══════════════════════════════════ */
+  .debt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+  }
+  .debt-card:last-child { margin-bottom: 0; }
+  .debt-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .debt-rate-badge {
+    font-size: 12px; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  }
+  .debt-card-body {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .debt-info-label { font-size: 10px; color: var(--text-muted); display: block; text-transform: uppercase; letter-spacing: 0.3px; font-weight: 600; }
+  .debt-info-value { font-size: 13px; font-weight: 700; color: var(--brown); margin-top: 2px; display: block; }
+  .debt-info-value.neg { color: var(--red); }
+  @media (max-width: 800px) { .debt-card-body { grid-template-columns: 1fr 1fr; } }
+
   /* ── Responsive ── */
   @media (max-width: 800px) {
     .sidebar { width: 60px; }
@@ -326,6 +363,9 @@
     </button>
     <button class="nav-item" onclick="goTo('budget')">
       <span class="nav-icon">💰</span><span>งบการเงิน</span>
+    </button>
+    <button class="nav-item" onclick="goTo('debt')">
+      <span class="nav-icon">💳</span><span>หนี้สิน</span>
     </button>
     <button class="nav-item" onclick="goTo('invest')">
       <span class="nav-icon">📈</span><span>ลงทุน</span>
@@ -582,6 +622,49 @@
     </div>
   </div>
 
+  <!-- ══════════ DEBT ══════════ -->
+  <div id="page-debt" class="page">
+    <div class="page-header">
+      <div class="flex-between">
+        <div>
+          <h2>จัดการหนี้สิน</h2>
+          <p>ติดตามยอดหนี้ คำนวณดอกเบี้ย และวางแผนชำระหนี้</p>
+        </div>
+        <button class="btn btn-primary" onclick="openAddDebt()">+ เพิ่มรายการหนี้</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-4 section" id="debt-stats"></div>
+      <div class="grid-2 section">
+        <div>
+          <div id="debt-list"></div>
+        </div>
+        <div>
+          <div class="card section">
+            <div class="card-header"><h3>💡 กลยุทธ์ชำระหนี้</h3></div>
+            <div class="card-body" id="debt-strategy">
+              <p style="font-size:13px;color:var(--text-muted)">เพิ่มข้อมูลหนี้เพื่อดูคำแนะนำ</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>⚡ จ่ายเพิ่มแล้วประหยัดได้เท่าไร?</h3></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">เลือกหนี้</label>
+                <select class="form-select" id="extra-debt-sel" onchange="calcExtra()"></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">จ่ายเพิ่มต่อเดือน (บาท)</label>
+                <input type="number" class="form-input" id="extra-amount" placeholder="1,000" oninput="calcExtra()">
+              </div>
+              <div id="extra-result"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ══════════ INSURE ══════════ -->
   <div id="page-insure" class="page">
     <div class="page-header">
@@ -821,12 +904,73 @@
   </div>
 </div>
 
+<!-- ══ MODAL: Debt ══ -->
+<div class="modal-overlay" id="modal-debt">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-debt-title">เพิ่มรายการหนี้</h3>
+      <button class="modal-close" onclick="closeModal('modal-debt')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">ประเภทหนี้</label>
+        <select class="form-select" id="debt-type">
+          <option value="mortgage">🏠 สินเชื่อบ้าน / คอนโด</option>
+          <option value="car">🚗 สินเชื่อรถยนต์</option>
+          <option value="credit_card">💳 บัตรเครดิต</option>
+          <option value="personal">👤 สินเชื่อส่วนบุคคล</option>
+          <option value="student">🎓 กยศ / กู้ยืมการศึกษา</option>
+          <option value="other">📋 หนี้อื่นๆ</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ชื่อ / สถาบัน</label>
+        <input type="text" class="form-input" id="debt-name" placeholder="เช่น กสิกรไทย — สินเชื่อบ้าน">
+      </div>
+      <div class="grid-2" style="gap:12px">
+        <div class="form-group">
+          <label class="form-label">ยอดหนี้คงเหลือ (บาท)</label>
+          <input type="number" class="form-input" id="debt-balance" placeholder="0" min="0" oninput="previewPayoff()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ดอกเบี้ยต่อปี (%)</label>
+          <input type="number" class="form-input" id="debt-rate" placeholder="5.5" step="0.1" min="0" oninput="previewPayoff()">
+        </div>
+      </div>
+      <div class="grid-2" style="gap:12px">
+        <div class="form-group">
+          <label class="form-label">ผ่อนต่อเดือน (บาท)</label>
+          <input type="number" class="form-input" id="debt-monthly" placeholder="0" min="0" oninput="previewPayoff()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ยอดกู้ต้นเงิน (บาท, ไม่บังคับ)</label>
+          <input type="number" class="form-input" id="debt-principal" placeholder="เพื่อแสดง % ชำระแล้ว">
+        </div>
+      </div>
+      <div id="debt-preview" style="margin-top:4px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('modal-debt')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveDebt()">บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ════════════════════════════════════════════
 //  CONSTANTS & DATA
 // ════════════════════════════════════════════
 
 const PALETTE = ['#B8860B','#3D7A52','#4A6FA5','#8A5FA8','#B85450','#C07030','#2E86AB'];
+
+const DEBT_TYPES = {
+  mortgage:    { label:'สินเชื่อบ้าน / คอนโด',  icon:'🏠', color:'#4A6FA5' },
+  car:         { label:'สินเชื่อรถยนต์',          icon:'🚗', color:'#3D7A52' },
+  credit_card: { label:'บัตรเครดิต',               icon:'💳', color:'#B85450' },
+  personal:    { label:'สินเชื่อส่วนบุคคล',       icon:'👤', color:'#8A5FA8' },
+  student:     { label:'กยศ / กู้ยืมการศึกษา',    icon:'🎓', color:'#C07030' },
+  other:       { label:'หนี้อื่นๆ',                icon:'📋', color:'#7A6250' },
+};
 
 const INS_TYPES = {
   life:     { label:'ประกันชีวิต',            icon:'🛡️', color:'#4A6FA5', taxMax:100000,  note:'max 100,000 บาท' },
@@ -880,8 +1024,10 @@ let assets   = load('fp_assets', [
 ]);
 let invSet   = load('fp_invset', { goal: 5000000, ret: 7 });
 let budgets  = load('fp_budgets', DEFAULT_BUDGETS);
-let policies = load('fp_policies', []);
+let policies   = load('fp_policies', []);
+let debts      = load('fp_debts', []);
 let editInsureId = null;
+let editDebtId   = null;
 let txnFilt  = 'all';
 let tempAssets = [];
 
@@ -909,6 +1055,7 @@ function goTo(id) {
     dashboard: renderDashboard,
     cashflow:  renderCashflow,
     budget:    renderBudget,
+    debt:      renderDebt,
     invest:    renderInvest,
     tax:       renderTax,
     retire:    calcRetire,
@@ -928,10 +1075,12 @@ function renderDashboard() {
 
   const ym = monthKey(now);
   const mt = txns.filter(t => t.date.startsWith(ym));
-  const inc  = sum(mt, 'income');
-  const exp  = sum(mt, 'expense');
-  const net  = inc - exp;
-  const pTot = assets.reduce((s,a) => s + a.cur, 0);
+  const inc      = sum(mt, 'income');
+  const exp      = sum(mt, 'expense');
+  const net      = inc - exp;
+  const pTot     = assets.reduce((s,a) => s + a.cur, 0);
+  const debtTot  = debts.reduce((s,d) => s + d.balance, 0);
+  const netWorth = pTot - debtTot;
 
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card">
@@ -943,12 +1092,13 @@ function renderDashboard() {
       <div class="stat-value negative font-mono">${fmt(exp)}</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">คงเหลือสุทธิ</div>
-      <div class="stat-value font-mono ${net>=0?'positive':'negative'}">${fmt(net)}</div>
-    </div>
-    <div class="stat-card">
       <div class="stat-label">Portfolio รวม</div>
       <div class="stat-value gold font-mono">${fmt(pTot)}</div>
+      ${debtTot > 0 ? `<div class="stat-sub">หนี้: ${fmt(debtTot)} · Net Worth: <strong style="color:${netWorth>=0?'var(--green)':'var(--red)'}">${fmt(netWorth)}</strong></div>` : ''}
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">คงเหลือสุทธิเดือนนี้</div>
+      <div class="stat-value font-mono ${net>=0?'positive':'negative'}">${fmt(net)}</div>
     </div>
   `;
 
@@ -1191,6 +1341,319 @@ function saveBudgets() {
   const orig = btn.textContent;
   btn.textContent = '✅ บันทึกแล้ว';
   setTimeout(() => { btn.textContent = orig; }, 1500);
+}
+
+// ════════════════════════════════════════════
+//  DEBT
+// ════════════════════════════════════════════
+
+function calcPayoffMonths(balance, rate, monthly) {
+  if (balance <= 0 || monthly <= 0) return 0;
+  const r = rate / 100 / 12;
+  if (r <= 0) return Math.ceil(balance / monthly);
+  if (monthly <= balance * r) return Infinity; // ผ่อนไม่พอคุมดอก
+  return Math.ceil(-Math.log(1 - balance * r / monthly) / Math.log(1 + r));
+}
+
+function calcTotalInterest(balance, rate, monthly) {
+  const m = calcPayoffMonths(balance, rate, monthly);
+  if (m === Infinity || m === 0) return m;
+  return Math.max(0, m * monthly - balance);
+}
+
+function payoffDate(months) {
+  if (months === Infinity || months === 0) return null;
+  const d = new Date();
+  d.setMonth(d.getMonth() + months);
+  return d.toLocaleDateString('th-TH', { month: 'long', year: 'numeric' });
+}
+
+function renderDebt() {
+  const totalBalance  = debts.reduce((s,d) => s + d.balance, 0);
+  const totalMonthly  = debts.reduce((s,d) => s + d.monthly, 0);
+  const totalInterest = debts.reduce((s,d) => {
+    const i = calcTotalInterest(d.balance, d.rate, d.monthly);
+    return (i === Infinity || i === 0) ? s : s + i;
+  }, 0);
+  const highRateDebt = debts.length ? debts.reduce((a,b) => a.rate > b.rate ? a : b, debts[0]) : null;
+
+  // Stat cards
+  document.getElementById('debt-stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">หนี้คงเหลือรวม</div>
+      <div class="stat-value negative font-mono">${fmt(totalBalance)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ผ่อนต่อเดือนรวม</div>
+      <div class="stat-value font-mono">${fmt(totalMonthly)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">ดอกเบี้ยรวมที่เหลือจ่าย</div>
+      <div class="stat-value negative font-mono">${fmt(totalInterest)}</div>
+      <div class="stat-sub">ถ้าผ่อนตามกำหนดทุกงวด</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">หนี้ดอกสูงสุด</div>
+      <div class="stat-value ${highRateDebt && highRateDebt.rate >= 15 ? 'negative' : ''} font-mono">${highRateDebt ? highRateDebt.rate + '%' : '—'}</div>
+      <div class="stat-sub">${highRateDebt ? (DEBT_TYPES[highRateDebt.type]||DEBT_TYPES.other).label : ''}</div>
+    </div>
+  `;
+
+  // Debt cards
+  const listEl = document.getElementById('debt-list');
+  if (debts.length === 0) {
+    listEl.innerHTML = `<div class="card"><div class="empty-state">
+      <div class="empty-icon">✅</div>
+      <p>ไม่มีหนี้ที่บันทึก — ดีมาก! หรือกดปุ่ม "เพิ่มรายการหนี้" เพื่อบันทึก</p>
+    </div></div>`;
+  } else {
+    listEl.innerHTML = debts.map(d => {
+      const dt      = DEBT_TYPES[d.type] || DEBT_TYPES.other;
+      const months  = calcPayoffMonths(d.balance, d.rate, d.monthly);
+      const intLeft = calcTotalInterest(d.balance, d.rate, d.monthly);
+      const paidPct = d.principal > 0 ? Math.min((1 - d.balance / d.principal) * 100, 100) : -1;
+      const barColor = d.rate >= 15 ? 'red' : d.rate >= 7 ? 'yellow' : 'green';
+      const rateColor = d.rate >= 15 ? 'var(--red)' : d.rate >= 7 ? '#856404' : 'var(--green)';
+      const paidOff = payoffDate(months);
+
+      return `<div class="debt-card">
+        <div class="debt-card-header">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:24px">${dt.icon}</span>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--brown)">${d.name}</div>
+              <div style="font-size:12px;color:var(--text-muted)">${dt.label}</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+            <span class="debt-rate-badge" style="background:${d.rate>=15?'var(--red-pale)':d.rate>=7?'var(--yellow-pale)':'var(--green-pale)'};color:${rateColor}">
+              ${d.rate}% / ปี
+            </span>
+            <button class="btn btn-ghost btn-sm" onclick="openEditDebt('${d.id}')">แก้ไข</button>
+            <button class="btn btn-danger" onclick="deleteDebt('${d.id}')">ลบ</button>
+          </div>
+        </div>
+        ${paidPct >= 0 ? `
+          <div style="margin:8px 0 2px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px">
+              <span>ชำระแล้ว ${paidPct.toFixed(0)}%</span>
+              <span>ต้นเงิน ${fmt(d.principal)}</span>
+            </div>
+            <div class="budget-bar" style="height:8px">
+              <div class="budget-bar-fill progress-fill ${barColor}" style="width:${paidPct}%"></div>
+            </div>
+          </div>` : ''}
+        <div class="debt-card-body">
+          <div>
+            <span class="debt-info-label">หนี้คงเหลือ</span>
+            <span class="debt-info-value neg">${fmt(d.balance)}</span>
+          </div>
+          <div>
+            <span class="debt-info-label">ผ่อน / เดือน</span>
+            <span class="debt-info-value">${fmt(d.monthly)}</span>
+          </div>
+          <div>
+            <span class="debt-info-label">คาดหมดหนี้</span>
+            <span class="debt-info-value">${
+              months === Infinity ? '⚠️ ไม่พอดอก' :
+              months === 0 ? '—' :
+              months + ' เดือน'
+            }</span>
+          </div>
+          <div>
+            <span class="debt-info-label">ดอกเบี้ยที่เหลือ</span>
+            <span class="debt-info-value neg">${
+              intLeft === Infinity ? '∞' :
+              intLeft === 0 ? '—' :
+              fmt(intLeft)
+            }</span>
+          </div>
+        </div>
+        ${paidOff ? `<div style="font-size:11px;color:var(--text-muted);margin-top:8px">📅 คาดชำระหมด: <strong>${paidOff}</strong></div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  // Strategy panel
+  renderDebtStrategy();
+
+  // Extra payment selector
+  const sel = document.getElementById('extra-debt-sel');
+  sel.innerHTML = debts.length === 0
+    ? '<option>— ยังไม่มีข้อมูลหนี้ —</option>'
+    : debts.map(d => `<option value="${d.id}">${(DEBT_TYPES[d.type]||DEBT_TYPES.other).icon} ${d.name}</option>`).join('');
+  calcExtra();
+}
+
+function renderDebtStrategy() {
+  const el = document.getElementById('debt-strategy');
+  if (debts.length === 0) {
+    el.innerHTML = '<p style="font-size:13px;color:var(--text-muted)">เพิ่มข้อมูลหนี้เพื่อดูคำแนะนำ</p>';
+    return;
+  }
+  const avalanche = [...debts].sort((a,b) => b.rate - a.rate);
+  const snowball  = [...debts].sort((a,b) => a.balance - b.balance);
+  const totalInt  = debts.reduce((s,d) => {
+    const i = calcTotalInterest(d.balance, d.rate, d.monthly);
+    return (i === Infinity || i === 0) ? s : s + i;
+  }, 0);
+
+  el.innerHTML = `
+    <div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:700;color:var(--brown);margin-bottom:4px">
+        ⚡ Avalanche Method
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted)"> — ประหยัดดอกเบี้ยสูงสุด</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">จ่ายเพิ่มในหนี้ดอกสูงก่อน แล้วโยนไปหนี้ถัดไป</div>
+      ${avalanche.map((d,i) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;font-weight:800;color:var(--gold-light);min-width:18px">${i+1}</span>
+          <span style="font-size:13px;flex:1">${(DEBT_TYPES[d.type]||DEBT_TYPES.other).icon} ${d.name}</span>
+          <span style="font-size:12px;font-weight:700;color:${d.rate>=15?'var(--red)':d.rate>=7?'#856404':'var(--green)'}">${d.rate}%</span>
+        </div>`).join('')}
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:700;color:var(--brown);margin-bottom:4px">
+        ❄️ Snowball Method
+        <span style="font-size:11px;font-weight:400;color:var(--text-muted)"> — ปิดหนี้ได้เร็ว สร้าง momentum</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px">จ่ายเพิ่มในหนี้ก้อนเล็กก่อน เพื่อปิดให้ได้เร็วๆ</div>
+      ${snowball.map((d,i) => `
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;font-weight:800;color:var(--gold-light);min-width:18px">${i+1}</span>
+          <span style="font-size:13px;flex:1">${(DEBT_TYPES[d.type]||DEBT_TYPES.other).icon} ${d.name}</span>
+          <span style="font-size:12px;color:var(--text-muted)">${fmt(d.balance)}</span>
+        </div>`).join('')}
+    </div>
+    ${totalInt > 0 ? `
+    <div class="highlight-box red" style="margin-top:4px">
+      <div style="font-size:11px;color:var(--brown-light);font-weight:700;margin-bottom:2px">ดอกเบี้ยรวมที่ต้องจ่ายทั้งหมด</div>
+      <div style="font-size:22px;font-weight:800;color:var(--red)">${fmt(totalInt)}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:2px">ถ้าผ่อนตามกำหนดทุกงวดโดยไม่จ่ายเพิ่ม</div>
+    </div>` : ''}
+  `;
+}
+
+function calcExtra() {
+  const sel    = document.getElementById('extra-debt-sel');
+  const extra  = parseFloat(document.getElementById('extra-amount').value) || 0;
+  const debt   = debts.find(d => d.id === sel.value);
+  const resEl  = document.getElementById('extra-result');
+
+  if (!debt || extra <= 0) {
+    resEl.innerHTML = extra > 0 && !debt
+      ? '<p style="font-size:12px;color:var(--text-muted)">เลือกหนี้ก่อน</p>'
+      : '<p style="font-size:12px;color:var(--text-muted)">ใส่จำนวนเงินที่จะจ่ายเพิ่มต่อเดือน</p>';
+    return;
+  }
+
+  const normalMonths = calcPayoffMonths(debt.balance, debt.rate, debt.monthly);
+  const extraMonths  = calcPayoffMonths(debt.balance, debt.rate, debt.monthly + extra);
+  const normalInt    = calcTotalInterest(debt.balance, debt.rate, debt.monthly);
+  const extraInt     = calcTotalInterest(debt.balance, debt.rate, debt.monthly + extra);
+
+  if (normalMonths === Infinity || normalMonths === 0) {
+    resEl.innerHTML = '<div class="highlight-box red"><div style="font-size:13px">⚠️ ผ่อนปัจจุบันไม่พอคุมดอกเบี้ย ควรเพิ่มยอดผ่อนก่อน</div></div>';
+    return;
+  }
+
+  const savedMonths = normalMonths - extraMonths;
+  const savedInt    = typeof normalInt === 'number' && typeof extraInt === 'number' ? normalInt - extraInt : 0;
+
+  resEl.innerHTML = `
+    <div class="highlight-box green" style="margin-top:12px">
+      <div style="font-size:12px;color:var(--brown-light);font-weight:700;margin-bottom:6px">จ่ายเพิ่ม ${fmt(extra)} / เดือน</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:11px;color:var(--text-muted)">หมดหนี้เร็วขึ้น</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green)">${savedMonths} เดือน</div>
+          <div style="font-size:11px;color:var(--text-muted)">${extraMonths} เดือน (จาก ${normalMonths})</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text-muted)">ประหยัดดอกเบี้ย</div>
+          <div style="font-size:20px;font-weight:800;color:var(--green)">${fmt(savedInt)}</div>
+          <div style="font-size:11px;color:var(--text-muted)">คาดหมดใน ${payoffDate(extraMonths)||'—'}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function previewPayoff() {
+  const balance = parseFloat(document.getElementById('debt-balance').value) || 0;
+  const rate    = parseFloat(document.getElementById('debt-rate').value)    || 0;
+  const monthly = parseFloat(document.getElementById('debt-monthly').value) || 0;
+  const el      = document.getElementById('debt-preview');
+  if (!balance || !monthly) { el.innerHTML = ''; return; }
+  const m = calcPayoffMonths(balance, rate, monthly);
+  const i = calcTotalInterest(balance, rate, monthly);
+  if (m === Infinity) {
+    el.innerHTML = `<div class="highlight-box red" style="font-size:13px">⚠️ ยอดผ่อน ${fmt(monthly)} ไม่พอจ่ายดอกเบี้ย ควรเพิ่มเป็นอย่างน้อย ${fmt(Math.ceil(balance * rate/100/12) + 1)}/เดือน</div>`;
+    return;
+  }
+  el.innerHTML = `<div class="highlight-box" style="font-size:13px;display:flex;gap:24px">
+    <div><div style="font-size:11px;color:var(--text-muted)">หมดหนี้ใน</div><strong>${m} เดือน</strong> (${payoffDate(m)||''})</div>
+    <div><div style="font-size:11px;color:var(--text-muted)">ดอกเบี้ยรวม</div><strong style="color:var(--red)">${typeof i==='number'?fmt(i):'—'}</strong></div>
+  </div>`;
+}
+
+function openAddDebt() {
+  editDebtId = null;
+  document.getElementById('debt-type').value      = 'mortgage';
+  document.getElementById('debt-name').value      = '';
+  document.getElementById('debt-balance').value   = '';
+  document.getElementById('debt-rate').value      = '';
+  document.getElementById('debt-monthly').value   = '';
+  document.getElementById('debt-principal').value = '';
+  document.getElementById('debt-preview').innerHTML = '';
+  document.getElementById('modal-debt-title').textContent = 'เพิ่มรายการหนี้';
+  openModal('modal-debt');
+}
+
+function openEditDebt(id) {
+  const d = debts.find(x => x.id === id);
+  if (!d) return;
+  editDebtId = id;
+  document.getElementById('debt-type').value      = d.type;
+  document.getElementById('debt-name').value      = d.name;
+  document.getElementById('debt-balance').value   = d.balance;
+  document.getElementById('debt-rate').value      = d.rate;
+  document.getElementById('debt-monthly').value   = d.monthly;
+  document.getElementById('debt-principal').value = d.principal || '';
+  document.getElementById('modal-debt-title').textContent = 'แก้ไขรายการหนี้';
+  previewPayoff();
+  openModal('modal-debt');
+}
+
+function saveDebt() {
+  const name    = document.getElementById('debt-name').value.trim();
+  const balance = parseFloat(document.getElementById('debt-balance').value) || 0;
+  const rate    = parseFloat(document.getElementById('debt-rate').value)    || 0;
+  const monthly = parseFloat(document.getElementById('debt-monthly').value) || 0;
+  if (!name || balance <= 0 || monthly <= 0) {
+    alert('กรุณากรอกชื่อ, ยอดหนี้คงเหลือ และยอดผ่อนต่อเดือน'); return;
+  }
+  const data = {
+    id:        editDebtId || Date.now().toString(),
+    type:      document.getElementById('debt-type').value,
+    name, balance, rate, monthly,
+    principal: parseFloat(document.getElementById('debt-principal').value) || 0,
+  };
+  if (editDebtId) {
+    const idx = debts.findIndex(x => x.id === editDebtId);
+    if (idx >= 0) debts[idx] = data;
+  } else {
+    debts.push(data);
+  }
+  save('fp_debts', debts);
+  closeModal('modal-debt');
+  renderDebt();
+}
+
+function deleteDebt(id) {
+  if (!confirm('ยืนยันลบรายการหนี้นี้?')) return;
+  debts = debts.filter(x => x.id !== id);
+  save('fp_debts', debts);
+  renderDebt();
 }
 
 // ════════════════════════════════════════════
