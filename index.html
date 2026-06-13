@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FinPlan — วางแผนการเงิน</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
     --bg: #FAF7F0; --surface: #FFFFFF; --surface2: #F5F0E8;
@@ -332,6 +336,43 @@
   .debt-info-value.neg { color: var(--red); }
   @media (max-width: 800px) { .debt-card-body { grid-template-columns: 1fr 1fr; } }
 
+  /* ══════════════════════════════════
+     AUTH OVERLAY
+  ══════════════════════════════════ */
+  #auth-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(145deg, #3D1F08 0%, #5C3D11 60%, #3D2A10 100%);
+    z-index: 9999;
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+  }
+  #auth-overlay.hidden { display: none; }
+  .auth-card {
+    background: white; border-radius: 20px;
+    padding: 36px 40px; width: 420px; max-width: 100%;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    animation: slideUp 0.25s ease;
+  }
+  .auth-logo { text-align: center; margin-bottom: 26px; }
+  .auth-logo .auth-icon { font-size: 38px; margin-bottom: 8px; display: block; }
+  .auth-logo h1 { font-size: 26px; font-weight: 800; color: var(--gold); letter-spacing: 5px; }
+  .auth-logo p { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .auth-tabs {
+    display: flex; gap: 4px; background: var(--surface2);
+    border-radius: 8px; padding: 3px; margin-bottom: 22px;
+  }
+  .auth-tab {
+    flex: 1; padding: 7px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; background: none; color: var(--text-muted);
+    transition: all 0.15s; font-family: inherit;
+  }
+  .auth-tab.active { background: white; color: var(--brown); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .auth-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: var(--text-muted); font-size: 12px; }
+  .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  #auth-error { font-size: 13px; color: var(--red); margin-bottom: 10px; min-height: 16px; }
+  #sidebar-user-info { padding: 8px 12px; margin: 4px; border-radius: 8px; background: rgba(255,255,255,0.07); }
+  #sidebar-user-name { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #sidebar-user-email { font-size: 10px; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
   /* ── Responsive ── */
   @media (max-width: 800px) {
     .sidebar { width: 60px; }
@@ -347,6 +388,49 @@
 </style>
 </head>
 <body>
+
+<!-- ══ AUTH OVERLAY ══ -->
+<div id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="auth-icon">💰</span>
+      <h1>FINPLAN</h1>
+      <p>วางแผนการเงินส่วนตัว</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login"  onclick="setAuthMode('login')">เข้าสู่ระบบ</button>
+      <button class="auth-tab"        id="tab-signup" onclick="setAuthMode('signup')">สมัครสมาชิก</button>
+    </div>
+    <div id="auth-name-wrap" class="form-group" style="display:none">
+      <label class="form-label">ชื่อที่ใช้แสดง (ไม่บังคับ)</label>
+      <input type="text" class="form-input" id="auth-name" placeholder="เช่น Chorludda">
+    </div>
+    <div class="form-group">
+      <label class="form-label">อีเมล</label>
+      <input type="email" class="form-input" id="auth-email" placeholder="your@email.com"
+             onkeydown="if(event.key==='Enter')doAuth()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">รหัสผ่าน</label>
+      <input type="password" class="form-input" id="auth-pass" placeholder="อย่างน้อย 6 ตัวอักษร"
+             onkeydown="if(event.key==='Enter')doAuth()">
+    </div>
+    <div id="auth-error"></div>
+    <button class="btn btn-primary" id="auth-submit-btn" onclick="doAuth()"
+            style="width:100%;justify-content:center;padding:11px;font-size:15px">
+      เข้าสู่ระบบ
+    </button>
+    <div class="auth-divider">หรือ</div>
+    <button class="btn btn-ghost" onclick="doGoogleAuth()"
+            style="width:100%;justify-content:center;gap:8px">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:16px;height:16px">
+      เข้าสู่ระบบด้วย Google
+    </button>
+    <div id="auth-loading" style="display:none;text-align:center;padding:18px;color:var(--text-muted);font-size:13px">
+      ⏳ <span id="auth-loading-msg">กำลังโหลด...</span>
+    </div>
+  </div>
+</div>
 
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -380,7 +464,17 @@
       <span class="nav-icon">🛡️</span><span>ประกัน</span>
     </button>
   </nav>
-  <div class="sidebar-footer">ข้อมูลบันทึกในเครื่อง</div>
+  <div id="sidebar-user-info" style="display:none">
+    <div id="sidebar-user-name"></div>
+    <div id="sidebar-user-email"></div>
+  </div>
+  <div class="sidebar-footer" style="display:flex;flex-direction:column;gap:6px">
+    <div style="font-size:10px;color:rgba(255,255,255,0.25)">ข้อมูลซิงค์ไปยัง Cloud</div>
+    <button onclick="doLogout()"
+      style="background:none;border:1px solid rgba(255,255,255,0.15);border-radius:6px;color:rgba(255,255,255,0.45);font-size:12px;cursor:pointer;padding:5px 10px;font-family:inherit;text-align:left;display:flex;align-items:center;gap:6px">
+      🚪 <span>ออกจากระบบ</span>
+    </button>
+  </div>
 </aside>
 
 <main class="main">
@@ -1011,7 +1105,10 @@ const CAT_ICONS = {
 function load(k, d) {
   try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; }
 }
-function save(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+function save(k, v) {
+  localStorage.setItem(k, JSON.stringify(v));
+  syncToFirestore(k, v); // async sync ขึ้น Cloud
+}
 
 let txns     = load('fp_txns', []);
 let assets   = load('fp_assets', [
@@ -2420,10 +2517,190 @@ function last12Months(now) {
 }
 
 // ════════════════════════════════════════════
+//  FIREBASE / AUTH
+// ════════════════════════════════════════════
+
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyDIncW1O7QICBHky6urDvyT0dmgbuXHBaQ",
+  authDomain:        "finplan-3b645.firebaseapp.com",
+  projectId:         "finplan-3b645",
+  storageBucket:     "finplan-3b645.firebasestorage.app",
+  messagingSenderId: "42347791469",
+  appId:             "1:42347791469:web:6d7a648d8702102212eb64",
+};
+
+const DATA_KEYS = ['fp_txns','fp_assets','fp_invset','fp_budgets','fp_policies','fp_debts'];
+const DEFAULT_ASSETS_TEMPLATE = () => [
+  { name:'หุ้น / SSF',              cost:0, cur:0, color:PALETTE[0] },
+  { name:'กองทุนรวม / RMF',          cost:0, cur:0, color:PALETTE[1] },
+  { name:'พันธบัตร / ตราสารหนี้',    cost:0, cur:0, color:PALETTE[2] },
+  { name:'เงินฝาก / บัญชีออมทรัพย์', cost:0, cur:0, color:PALETTE[3] },
+  { name:'ทองคำ',                    cost:0, cur:0, color:PALETTE[4] },
+  { name:'อสังหาริมทรัพย์',           cost:0, cur:0, color:PALETTE[5] },
+];
+
+let currentUser = null;
+let fbDB = null, fbAuth = null;
+let authMode = 'login';
+
+// ── init ──────────────────────────────────
+function initFirebase() {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  fbAuth = firebase.auth();
+  fbDB   = firebase.firestore();
+
+  fbAuth.onAuthStateChanged(async user => {
+    if (user) {
+      currentUser = user;
+      setAuthLoading('กำลังโหลดข้อมูลของคุณ...');
+      await loadFromFirestore();
+      hideAuthScreen();
+      updateSidebarUser(user);
+      renderDashboard();
+    } else {
+      currentUser = null;
+      showAuthScreen();
+    }
+  });
+}
+
+// ── auth screen ───────────────────────────
+function showAuthScreen() {
+  const el = document.getElementById('auth-overlay');
+  el.classList.remove('hidden');
+  setAuthLoading(null);
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-pass').value  = '';
+  document.getElementById('auth-error').textContent = '';
+}
+function hideAuthScreen() {
+  document.getElementById('auth-overlay').classList.add('hidden');
+}
+function setAuthLoading(msg) {
+  const el  = document.getElementById('auth-loading');
+  const btn = document.getElementById('auth-submit-btn');
+  if (msg) {
+    el.style.display = 'block';
+    document.getElementById('auth-loading-msg').textContent = msg;
+    btn.disabled = true;
+  } else {
+    el.style.display = 'none';
+    btn.disabled = false;
+  }
+}
+function setAuthMode(mode) {
+  authMode = mode;
+  document.getElementById('tab-login').classList.toggle('active',  mode === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
+  document.getElementById('auth-name-wrap').style.display = mode === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-submit-btn').textContent  = mode === 'login' ? 'เข้าสู่ระบบ' : 'สมัครสมาชิก';
+  document.getElementById('auth-error').textContent = '';
+}
+
+// ── auth actions ──────────────────────────
+async function doAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const pass  = document.getElementById('auth-pass').value;
+  if (!email || !pass) {
+    document.getElementById('auth-error').textContent = 'กรุณากรอกอีเมลและรหัสผ่าน'; return;
+  }
+  setAuthLoading(authMode === 'login' ? 'กำลังเข้าสู่ระบบ...' : 'กำลังสมัครสมาชิก...');
+  document.getElementById('auth-error').textContent = '';
+  try {
+    if (authMode === 'login') {
+      await fbAuth.signInWithEmailAndPassword(email, pass);
+    } else {
+      const cred = await fbAuth.createUserWithEmailAndPassword(email, pass);
+      const name = document.getElementById('auth-name').value.trim();
+      if (name) await cred.user.updateProfile({ displayName: name });
+    }
+  } catch(e) {
+    setAuthLoading(null);
+    const msgs = {
+      'auth/user-not-found':       'ไม่พบบัญชีนี้ — ลองสมัครสมาชิกใหม่',
+      'auth/wrong-password':       'รหัสผ่านไม่ถูกต้อง',
+      'auth/invalid-credential':   'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+      'auth/email-already-in-use': 'อีเมลนี้ถูกใช้งานแล้ว',
+      'auth/weak-password':        'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร',
+      'auth/invalid-email':        'รูปแบบอีเมลไม่ถูกต้อง',
+      'auth/too-many-requests':    'ลองใหม่ภายหลัง (พยายามเข้าระบบบ่อยเกินไป)',
+    };
+    document.getElementById('auth-error').textContent = msgs[e.code] || e.message;
+  }
+}
+
+async function doGoogleAuth() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    await fbAuth.signInWithPopup(provider);
+  } catch(e) {
+    document.getElementById('auth-error').textContent = e.message;
+  }
+}
+
+function doLogout() {
+  if (!confirm('ออกจากระบบ?')) return;
+  fbAuth.signOut();
+  // clear local cache
+  DATA_KEYS.forEach(k => localStorage.removeItem(k));
+  // reset variables
+  txns = []; assets = DEFAULT_ASSETS_TEMPLATE();
+  invSet = { goal:5000000, ret:7 }; budgets = { ...DEFAULT_BUDGETS };
+  policies = []; debts = [];
+  document.getElementById('sidebar-user-info').style.display = 'none';
+}
+
+// ── Firestore sync ────────────────────────
+async function syncToFirestore(key, value) {
+  if (!currentUser || !fbDB) return;
+  try {
+    await fbDB.collection('users').doc(currentUser.uid).set({ [key]: value }, { merge: true });
+  } catch(e) { console.warn('Sync failed:', e.message); }
+}
+
+async function loadFromFirestore() {
+  if (!currentUser || !fbDB) return;
+  try {
+    const doc = await fbDB.collection('users').doc(currentUser.uid).get();
+    if (doc.exists) {
+      // มีข้อมูลใน Cloud → โหลดลง localStorage
+      const data = doc.data();
+      DATA_KEYS.forEach(k => {
+        if (data[k] !== undefined) localStorage.setItem(k, JSON.stringify(data[k]));
+      });
+    } else {
+      // ใช้งานครั้งแรก → อัปโหลด localStorage เดิมขึ้น Cloud
+      const snapshot = {};
+      DATA_KEYS.forEach(k => {
+        const v = localStorage.getItem(k);
+        if (v) snapshot[k] = JSON.parse(v);
+      });
+      await fbDB.collection('users').doc(currentUser.uid).set(snapshot);
+    }
+    // โหลด variables ใหม่จาก localStorage
+    txns     = load('fp_txns', []);
+    assets   = load('fp_assets', DEFAULT_ASSETS_TEMPLATE());
+    invSet   = load('fp_invset', { goal:5000000, ret:7 });
+    budgets  = load('fp_budgets', { ...DEFAULT_BUDGETS });
+    policies = load('fp_policies', []);
+    debts    = load('fp_debts', []);
+  } catch(e) {
+    console.warn('Load from Firestore failed:', e.message);
+  }
+}
+
+function updateSidebarUser(user) {
+  const info = document.getElementById('sidebar-user-info');
+  info.style.display = 'block';
+  document.getElementById('sidebar-user-name').textContent  = user.displayName || '👤 บัญชีของฉัน';
+  document.getElementById('sidebar-user-email').textContent = user.email;
+}
+
+// ════════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════════
 
-renderDashboard();
+initFirebase();
 </script>
 </body>
 </html>
